@@ -47,6 +47,9 @@ def white():
     * Thin black outer border
     * Minor grid lines halfway between major ticks
     """
+
+    pal = sns.color_palette('deep')                                                 
+    sns.set_context('talk')
     sns.set_style('whitegrid', {'axes.edgecolor':'0.1', 
                                 'legend.frameon': True,
                                 'xtick.color': '.15',
@@ -59,11 +62,9 @@ def white():
                                 'ytick.direction': 'out',
                                 'axes.axisbelow': True,
                                 'axes.linewidth': 0.4,
-                                'font.family': ['serif'],
-                                'font.serif': ['Times New Roman']
-                                                    #u'Liberation Sans',
-                                                    #u'Bitstream Vera Sans',
-                                                    #u'sans-serif'],
+                                'font.family': 'sans-serif',
+                                'font.sans-serif': ['Helvetica', 'Arial',      
+                                                    'Verdana', 'sans-serif']
                                 })
 
 def minor_grid(ax):
@@ -99,9 +100,7 @@ def dark():
                                'ytick.direction': 'out',
                                'axes.axisbelow': False,
                                'axes.linewidth': 0.4,
-                               'font.family' : 'sans-serif',                       
-                               'font.sans-serif' : ['Helvetica', 'Arial',          
-                                                     'Verdana', 'sans-serif'] 
+                               'font.family' : 'serif',                       
                                })
 
 def ticks_bottom_left(ax):

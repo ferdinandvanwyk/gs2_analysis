@@ -12,6 +12,7 @@ import seaborn as sns
 import pyfilm as pf
 plt.rcParams.update({'figure.autolayout': True})
 mpl.rcParams['axes.unicode_minus']=False                                        
+import f90nml as nml
 
 #local
 import plot_style
@@ -28,14 +29,13 @@ t = np.array(ncfile.variables['t'][:])
 gradpar = np.array(ncfile.variables['gradpar'][:])
 grho = np.array(ncfile.variables['grho'][:])
 bmag = np.array(ncfile.variables['bmag'][:])
+drhodpsi = float(ncfile.variables['drhodpsi'].data)
 dth = np.append(np.diff(th), 0)
 
 phi = field.get_field(in_file, 'phi_igomega_by_mode', None)
 ntot = field.get_field(in_file, 'ntot_igomega_by_mode', 0)
 t_perp = field.get_field(in_file, 'tperp_igomega_by_mode', 0)
 t_par = field.get_field(in_file, 'tpar_igomega_by_mode', 0)
-
-q_nc = np.array(ncfile.variables['es_heat_flux'][:])
 
 # Normalization parameters
 # Outer scale in m
@@ -66,30 +66,27 @@ x = np.linspace(-np.pi/kx[1], np.pi/kx[1], nx)*rhoref
 y = np.linspace(-np.pi/ky[1], np.pi/ky[1], ny)*rhoref \
                      *np.tan(pitch_angle)
 
-# Convert to real space
-v_exb = field.field_to_real_space(1j*ky*phi)
-ntot = field.field_to_real_space(ntot)
-t_perp = field.field_to_real_space(t_perp)
-t_par = field.field_to_real_space(t_par)
+# Extract input file from NetCDF and write to text
+os.system('sh extract_input_file.sh ' + str(in_file) + ' > input_file.in')
+gs2_in = nml.read('input_file.in')
 
-q = ((t_perp + t_par/2 + 3/2*ntot)*v_exb).real/2
+# Calculate kxfac
+rhoc = float(gs2_in['theta_grid_parameters']['rhoc'])
+qinp = float(gs2_in['theta_grid_parameters']['qinp'])
 
-q_max = np.max(q)
-q_min = np.min(q)                          
-if np.abs(q_max) > np.abs(q_min):
-    contours = np.around(np.linspace(-q_max, q_max, 20), 7)    
-else:                                                               
-    contours = np.around(np.linspace(q_min, -q_min, 20), 7)    
+kxfac = abs(qinp)/rhoc/abs(drhodpsi)
 
-plot_options = {'levels':contours, 'cmap':'seismic'}
-options = {'file_name':'q_vs_x_vs_y',       
-           'film_dir':'analysis/local_q',
-           'frame_dir':'analysis/local_q/film_frames',   
-           'aspect':'equal',                                            
-           'xlabel':r'$x (m)$',                                         
-           'ylabel':r'$y (m)$',                                         
-           'cbar_ticks':5,                                
-           'cbar_label':r'$Q_i(x, y) / Q_{gB}$',                          
+# Calculate the zonal flow velocity
+v_zf = 0.5 * kxfac * np.fft.ifft(phi[:,:,0]*kx[np.newaxis,:], axis=1).imag* \
+       nx*rho_star
+
+# Make film of v_zf versus x
+plot_options = {}
+options = {'file_name':'v_zf_vs_x',       
+           'film_dir':'analysis/zf',
+           'frame_dir':'analysis/zf/film_frames',   
+           'xlabel':r'$x$ $(m)$',                                         
+           'ylabel':r'$v_{ZF}$ $(v_{th,i})$',                          
            'bbox_inches':'tight',
            'fps':30}
 
@@ -98,4 +95,17 @@ for it in range(nt):
     options['title'].append(r'Time = {0:04d} $\mu s$'.format(           
                             int(np.round((t[it]-t[0])*1e6))))
 
-pf.make_film_2d(x, y, q[:,:,:], plot_options=plot_options, options=options)
+pf.make_film_1d(x, v_zf, plot_options=plot_options, options=options)
+
+
+
+
+
+
+
+
+
+
+
+
+ncfile.close()
