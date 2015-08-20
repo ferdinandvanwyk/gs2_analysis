@@ -39,3 +39,16 @@ def get_field(file_name, nc_var_name, spec_idx):
 
     nc_file.close()
     return(nc_var)
+
+def calculate_contours(field, n_contours=20):
+    """
+    Calculates symmetric contours around zero.
+    """
+    f_max = np.max(field)
+    f_min = np.min(field)
+    if np.abs(f_max) > np.abs(f_min):
+        contours = np.around(np.linspace(-f_max, f_max, n_contours), 7)    
+    else:                                                               
+        contours = np.around(np.linspace(f_min, -f_min, n_contours), 7)    
+
+    return(contours)
