@@ -27,7 +27,9 @@ th = np.array(ncfile.variables['theta'][:])
 t = np.array(ncfile.variables['t'][:])
 gradpar = np.array(ncfile.variables['gradpar'][:])
 
+print('Reading ntot_i...')
 ntot_i = field.get_field(in_file, 'ntot_igomega_by_mode', 0)
+print('Reading ntot_e...')
 ntot_e = field.get_field(in_file, 'ntot_igomega_by_mode', 1)
 
 # Normalization parameters
