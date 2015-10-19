@@ -141,19 +141,19 @@ class Run(object):
         Calculate the local heat flux Q(x, y) for the ion species.
         """
 
-    self.phi = field.get_field(self.cdf_file, 'phi_igomega_by_mode', None)
-    self.read_ntot()
-    self.read_tperp()
-    self.read_tpar()
+        self.phi = field.get_field(self.cdf_file, 'phi_igomega_by_mode', None)
+        self.read_ntot()
+        self.read_tperp()
+        self.read_tpar()
 
-    ncfile = Dataset(self.cdf_file, 'r')
-    self.q_nc = np.array(ncfile.variables['es_heat_flux'][:])
+        ncfile = Dataset(self.cdf_file, 'r')
+        self.q_nc = np.array(ncfile.variables['es_heat_flux'][:])
 
-    # Convert to real space
-    self.v_exb = field.field_to_real_space(1j*self.ky*self.phi)
-    self.ntot_i = self.ntot_i/self.rho_star
-    self.tperp_i = self.tperp_i/self.rho_star
-    self.tpar_i = self.tpar_i/self.rho_star
+        # Convert to real space
+        self.v_exb = field.field_to_real_space(1j*self.ky*self.phi)
+        self.ntot_i = self.ntot_i/self.rho_star
+        self.tperp_i = self.tperp_i/self.rho_star
+        self.tpar_i = self.tpar_i/self.rho_star
 
-    self.q = ((self.tperp_i + self.tpar_i/2 + 3/2*self.ntot_i)*self.v_exb).real/2
+        self.q = ((self.tperp_i + self.tpar_i/2 + 3/2*self.ntot_i)*self.v_exb).real/2
 
