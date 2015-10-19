@@ -4,7 +4,7 @@ import sys
 
 # Third Party
 import numpy as np
-from scipy.io import netcdf
+from netCDF4 import Dataset
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
@@ -20,7 +20,7 @@ plot_style.white()
 
 # Read NetCDF
 in_file = sys.argv[1]
-ncfile = netcdf.netcdf_file(in_file, 'r')
+ncfile = Dataset(in_file, 'r')
 kx = np.array(ncfile.variables['kx'][:])
 ky = np.array(ncfile.variables['ky'][:])
 th = np.array(ncfile.variables['theta'][:])
