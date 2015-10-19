@@ -24,9 +24,7 @@ def phi_film(run):
     """
     Create film of electrostatic potential.
     """
-    print('Reading phi...')
-    run.phi = field.get_field(run.cdf_file, 'phi_igomega_by_mode', None)
-    run.phi = field.field_to_real_space(run.phi)*run.rho_star
+    run.read_phi()
 
     contours = field.calculate_contours(run.phi)
 
@@ -57,14 +55,7 @@ def ntot_film(run):
     Create film of density fluctuations.
     """
 
-    print('Reading ntot_i...')
-    run.ntot_i = field.get_field(run.cdf_file, 'ntot_igomega_by_mode', 0)
-    print('Reading ntot_e...')
-    run.ntot_e = field.get_field(run.cdf_file, 'ntot_igomega_by_mode', 1)
-
-    # Convert to real space
-    run.ntot_i = field.field_to_real_space(run.ntot_i)*run.rho_star
-    run.ntot_e = field.field_to_real_space(run.ntot_e)*run.rho_star
+    run.read_ntot()
 
     # Ion density film
     contours = field.calculate_contours(run.ntot_i)
@@ -121,11 +112,7 @@ def upar_film(run):
     Make film of parallel velocity.
     """
 
-    run.upar_i = field.get_field(run.cdf_file, 'upar_igomega_by_mode', 0)
-    run.upar_e = field.get_field(run.cdf_file, 'upar_igomega_by_mode', 1)
-
-    run.upar_i = field.field_to_real_space(run.upar_i)*run.rho_star
-    run.upar_e = field.field_to_real_space(run.upar_e)*run.rho_star
+    run.read_upar()
 
     # Ion upar film
     contours = field.calculate_contours(run.upar_i)
@@ -182,12 +169,7 @@ def tpar_film(run):
     Make film of parallel temperature.
     """
 
-    run.tpar_i = field.get_field(run.cdf_file, 'tpar_igomega_by_mode', 0)
-    run.tpar_e = field.get_field(run.cdf_file, 'tpar_igomega_by_mode', 1)
-
-    # Convert to real space
-    run.tpar_i = field.field_to_real_space(run.tpar_i)*run.rho_star
-    run.tpar_e = field.field_to_real_space(run.tpar_e)*run.rho_star
+    run.read_tpar()
 
     # Ion updar film
     contours = field.calculate_contours(run.tpar_i)
@@ -243,13 +225,8 @@ def tperp_film(run):
     """
     Make film of perpendicular temperature.
     """
-
-    run.tperp_i = field.get_field(run.cdf_file, 'tperp_igomega_by_mode', 0)
-    run.tperp_e = field.get_field(run.cdf_file, 'tperp_igomega_by_mode', 1)
-
-    # Convert to real space
-    run.tperp_i = field.field_to_real_space(run.tperp_i)*run.rho_star
-    run.tperp_e = field.field_to_real_space(run.tperp_e)*run.rho_star
+    
+    run.read_tperp()
 
     # Ion updar film
     contours = field.calculate_contours(run.tperp_i)

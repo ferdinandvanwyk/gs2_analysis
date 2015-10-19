@@ -11,7 +11,7 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 import seaborn as sns
 import pyfilm as pf
 plt.rcParams.update({'figure.autolayout': True})
-mpl.rcParams['axes.unicode_minus']=False                                        
+mpl.rcParams['axes.unicode_minus']=False
 
 #local
 import plot_style
@@ -30,12 +30,15 @@ class Run(object):
         self.cdf_file = cdf_file
 
         ncfile = Dataset(cdf_file, 'r')
-        
+
         self.kx = np.array(ncfile.variables['kx'][:])
         self.ky = np.array(ncfile.variables['ky'][:])
         self.theta = np.array(ncfile.variables['theta'][:])
         self.t = np.array(ncfile.variables['t'][:])
         self.gradpar = np.array(ncfile.variables['gradpar'][:])
+        self.grho = np.array(ncfile.variables['grho'][:])
+        self.bmag = np.array(ncfile.variables['bmag'][:])
+        self.dtheta = np.append(np.diff(self.theta), 0)
 
         ncfile.close()
 
@@ -64,11 +67,93 @@ class Run(object):
         self.nx = self.nkx
         self.ny = 2*(self.nky - 1)
         self.t = self.t*self.amin/self.vth
-        self.x = np.linspace(-np.pi/self.kx[1], np.pi/self.kx[1], 
+        self.x = np.linspace(-np.pi/self.kx[1], np.pi/self.kx[1],
                              self.nx)*self.rhoref
-        self.y = np.linspace(-np.pi/self.ky[1], np.pi/self.ky[1], 
+        self.y = np.linspace(-np.pi/self.ky[1], np.pi/self.ky[1],
                              self.ny)*self.rhoref*np.tan(self.pitch_angle)
 
+    def read_phi(self):
+        """
+        Read the electrostatic potenential from the NetCDF file.
+        """
 
+        print('Reading phi...')
+        self.phi = field.get_field(self.cdf_file, 'phi_igomega_by_mode', None)
+        self.phi = field.field_to_real_space(self.phi)*self.rho_star
 
+    def read_ntot(self):
+        """
+        Read the electrostatic potenential from the NetCDF file.
+        """
+
+        print('Reading ntot_i...')
+        self.ntot_i = field.get_field(self.cdf_file, 'ntot_igomega_by_mode', 0)
+        print('Reading ntot_e...')
+        self.ntot_e = field.get_field(self.cdf_file, 'ntot_igomega_by_mode', 1)
+
+        # Convert to real space
+        self.ntot_i = field.field_to_real_space(self.ntot_i)*self.rho_star
+        self.ntot_e = field.field_to_real_space(self.ntot_e)*self.rho_star
+
+    def read_upar(self):
+        """
+        Read the parallel velocity.
+        """
+
+        print('Reading upar_i...')
+        self.upar_i = field.get_field(self.cdf_file, 'upar_igomega_by_mode', 0)
+        print('Reading upar_e...')
+        self.upar_e = field.get_field(self.cdf_file, 'upar_igomega_by_mode', 1)
+
+        self.upar_i = field.field_to_real_space(self.upar_i)*self.rho_star
+        self.upar_e = field.field_to_real_space(self.upar_e)*self.rho_star
+
+    def read_tpar(self):
+        """
+        Read the parallel temperature.
+        """
+
+        print('Reading tpar_i...')
+        self.tpar_i = field.get_field(self.cdf_file, 'tpar_igomega_by_mode', 0)
+        print('Reading tpar_e...')
+        self.tpar_e = field.get_field(self.cdf_file, 'tpar_igomega_by_mode', 1)
+
+        # Convert to real space
+        self.tpar_i = field.field_to_real_space(self.tpar_i)*self.rho_star
+        self.tpar_e = field.field_to_real_space(self.tpar_e)*self.rho_star
+
+    def read_tperp(self):
+        """
+        Read the perpendicular temperature.
+        """
+
+        print('Reading tperp_i...')
+        self.tperp_i = field.get_field(self.cdf_file, 'tperp_igomega_by_mode', 0)
+        print('Reading tperp_i...')
+        self.tperp_e = field.get_field(self.cdf_file, 'tperp_igomega_by_mode', 1)
+
+        # Convert to real space
+        self.tperp_i = field.field_to_real_space(self.tperp_i)*self.rho_star
+        self.tperp_e = field.field_to_real_space(self.tperp_e)*self.rho_star
+
+    def calculate_q(self):
+        """
+        Calculate the local heat flux Q(x, y) for the ion species.
+        """
+
+    self.phi = field.get_field(self.cdf_file, 'phi_igomega_by_mode', None)
+    self.read_ntot()
+    self.read_tperp()
+    self.read_tpar()
+
+    ncfile = Dataset(self.cdf_file, 'r')
+    self.q_nc = np.array(ncfile.variables['es_heat_flux'][:])
+
+    # Convert to real space
+    self.v_exb = field.field_to_real_space(1j*self.ky*self.phi)
+    self.ntot_i = self.ntot_i/self.rho_star
+    self.tperp_i = self.tperp_i/self.rho_star
+    self.tpar_i = self.tpar_i/self.rho_star
+
+    self.q = ((self.tperp_i + self.tpar_i/2 + 3/2*self.ntot_i)*self.v_exb).real/2
 
