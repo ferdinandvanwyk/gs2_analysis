@@ -33,7 +33,7 @@ test[test <= cut_off] = 0
 # normalize
 test /= np.max(test)
 
-blobs = np.array(blob_doh(test, min_sigma = 1, max_sigma=10, threshold=0.003))
+blobs = np.array(blob_doh(test, min_sigma = 1, max_sigma=10, threshold=0.005))
 print(blobs)
 
 fig, ax = plt.subplots(1, 1)
@@ -54,9 +54,9 @@ for it in range(run.nt):
     # normalize
     tmp /= np.max(tmp)
 
-    blobs = np.array(blob_doh(tmp, min_sigma = 1, max_sigma=10, threshold=0.003))
+    blobs = np.array(blob_doh(tmp, min_sigma = 1, max_sigma=10, threshold=0.005))
     nblobs[it] = len(blobs[:,0]) 
 
 plt.plot(nblobs)
 plt.show()
-print(np.mean(nblobs))
+print('Avg no. of blobs = ', int(np.round(np.mean(nblobs))))
