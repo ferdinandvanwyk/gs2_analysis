@@ -158,3 +158,7 @@ class Run(object):
 
         self.q = ((self.tperp_i + self.tpar_i/2 + 3/2*self.ntot_i)*self.v_exb).real/2
 
+        dnorm = self.dtheta/self.bmag/self.gradpar
+        wgt = np.sum(dnorm*self.grho)
+
+        self.q = self.q * dnorm[int(self.nth/2)] / wgt
