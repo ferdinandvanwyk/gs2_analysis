@@ -34,7 +34,6 @@ test[test <= cut_off] = 0
 test /= np.max(test)
 
 blobs = np.array(blob_doh(test, min_sigma = 1, max_sigma=10, threshold=0.005))
-print(blobs)
 
 fig, ax = plt.subplots(1, 1)
 ax.imshow(test, interpolation='nearest')
