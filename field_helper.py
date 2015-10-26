@@ -25,6 +25,30 @@ def get_field(cdf_file, nc_var_name, spec_idx):
     nc_file.close()
     return(nc_var)
 
+def get_field_final_timestep(cdf_file, nc_var_name, spec_idx):
+    """
+    Read field from ncfile and prepare for calculations.
+
+    * Read from NetCDF file
+    * Swap axes order to be (t, x, y)
+    * Convert to complex form
+    * Apply fourier correction
+    """
+
+    nc_file = Dataset(cdf_file, 'r')
+    if spec_idx == None:
+        nc_var = np.array(nc_file.variables[nc_var_name][:,:,:,:])
+    else:
+        nc_var = np.array(nc_file.variables[nc_var_name][spec_idx,:,:,:,:])
+
+    nc_var = np.swapaxes(nc_var, 0, 1)
+    nc_var = nc_var[:,:,:,0] + 1j*nc_var[:,:,:,1]
+
+    nc_var[:,1:,:] = nc_var[:,1:,:]/2 
+
+    nc_file.close()
+    return(nc_var)
+
 def field_to_real_space(field):
     """
     Converts field from (kx, ky) to (x, y) and saves as new array attribute.

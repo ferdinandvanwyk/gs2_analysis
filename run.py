@@ -141,6 +141,7 @@ class Run(object):
         Calculate the local heat flux Q(x, y) for the ion species.
         """
 
+        # Need phi as a function of kx, ky so read directly from netcdf file
         self.phi = field.get_field(self.cdf_file, 'phi_igomega_by_mode', None)
         self.read_ntot()
         self.read_tperp()

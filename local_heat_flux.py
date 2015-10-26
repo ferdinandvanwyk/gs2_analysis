@@ -23,6 +23,9 @@ run = Run(sys.argv[1])
 
 run.calculate_q()
 
+print(np.mean(run.q[-1,:,:]), run.q_nc[-1,0])
+sys.exit()
+
 q_max = np.max(run.q)
 q_min = np.min(run.q)
 if np.abs(q_max) > np.abs(q_min):
