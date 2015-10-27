@@ -36,10 +36,13 @@ test /= np.max(test)
 blobs = np.array(blob_doh(test, min_sigma = 1, max_sigma=10, threshold=0.005))
 
 fig, ax = plt.subplots(1, 1)
-ax.imshow(test, interpolation='nearest')
+plt.contourf(np.transpose(test), 40, interpolation='nearest')
+plt.colorbar()
+plt.xlabel('x index')
+plt.ylabel('y index')
 for blob in blobs:                                                          
         y, x, r = blob                                                          
-        c = plt.Circle((x, y), r, color='red', linewidth=2, fill=False)         
+        c = plt.Circle((y, x), r, color='red', linewidth=2, fill=False)
         ax.add_patch(c)
 plt.show()
 
@@ -57,5 +60,7 @@ for it in range(run.nt):
     nblobs[it] = len(blobs[:,0]) 
 
 plt.plot(nblobs)
+plt.xlabel('time index')
+plt.ylabel('Number of blobs')
 plt.show()
 print('Avg no. of blobs = ', int(np.round(np.mean(nblobs))))
