@@ -19,7 +19,10 @@ from run import Run
 import plot_style
 import field_helper as field
 plot_style.white()
-    
+pal = sns.color_palette('deep')                                                 
+
+os.system('mkdir -p analysis/structures')
+
 run = Run(sys.argv[1])
 
 run.calculate_q()
@@ -42,9 +45,9 @@ plt.xlabel('x index')
 plt.ylabel('y index')
 for blob in blobs:                                                          
         y, x, r = blob                                                          
-        c = plt.Circle((y, x), r, color='red', linewidth=2, fill=False)
+        c = plt.Circle((y, x), r, color=pal[2], linewidth=2, fill=False)
         ax.add_patch(c)
-plt.show()
+plt.savefig('analysis/structures/typical_frame.pdf')
 
 # Full loop over time
 nblobs = np.empty(run.nt, dtype=int)
@@ -59,8 +62,9 @@ for it in range(run.nt):
     blobs = np.array(blob_doh(tmp, min_sigma = 1, max_sigma=10, threshold=0.005))
     nblobs[it] = len(blobs[:,0]) 
 
+plt.clf()
 plt.plot(nblobs)
 plt.xlabel('time index')
 plt.ylabel('Number of blobs')
-plt.show()
+plt.savefig('analysis/structures/nblobs.pdf')
 print('Avg no. of blobs = ', int(np.round(np.mean(nblobs))))
