@@ -164,6 +164,38 @@ def upar_film(run):
     run.upar_e = None
     gc.collect()
 
+def v_exb_film(run):
+    """
+    Make film of parallel velocity.
+    """
+
+    run.calculate_v_exb()
+
+    # Ion upar film
+    contours = field.calculate_contours(run.v_exb)
+
+    plot_options = {'levels':contours, 'cmap':'seismic'}
+    options = {'file_name':'v_exb',
+               'film_dir':'analysis/moments',
+               'frame_dir':'analysis/moments/film_frames',
+               'aspect':'equal',
+               'xlabel':r'$x (m)$',
+               'ylabel':r'$y (m)$',
+               'cbar_ticks':5,
+               'cbar_label':r'$v_{E \times B}$ (m/s)',
+               'bbox_inches':'tight',
+               'fps':30}
+
+    options['title'] = []
+    for it in range(run.nt):
+        options['title'].append(r'Time = {0:04d} $\mu s$'.format(
+                                int(np.round((run.t[it]-run.t[0])*1e6))))
+
+    pf.make_film_2d(run.x, run.y, run.v_exb, plot_options=plot_options, options=options)
+
+    run.v_exb = None
+    gc.collect()
+
 def tpar_film(run):
     """
     Make film of parallel temperature.
@@ -282,6 +314,7 @@ run = Run(sys.argv[1])
 phi_film(run)
 ntot_film(run)
 upar_film(run)
+v_exb_film(run)
 tpar_film(run)
 tperp_film(run)
 
