@@ -136,6 +136,16 @@ class Run(object):
         self.tperp_i = field.field_to_real_space(self.tperp_i)*self.rho_star
         self.tperp_e = field.field_to_real_space(self.tperp_e)*self.rho_star
 
+    def calculate_v_exb(self):
+        """
+        Calculates the radial ExB velocity in real space in units of v_th,i.
+        """
+
+        phi_k = field.get_field(self.cdf_file, 'phi_igomega_by_mode', None)
+
+        self.v_exb = field.field_to_real_space(1j*self.ky*phi_k)*\
+                     self.rho_star*self.vth
+
     def calculate_q(self):
         """
         Calculate the local heat flux Q(x, y) for the ion species.
@@ -151,12 +161,12 @@ class Run(object):
         self.q_nc = np.array(ncfile.variables['es_heat_flux'][:])
 
         # Convert to real space
-        self.v_exb = field.field_to_real_space(1j*self.ky*self.phi)
-        self.ntot_i = self.ntot_i/self.rho_star
-        self.tperp_i = self.tperp_i/self.rho_star
-        self.tpar_i = self.tpar_i/self.rho_star
+        v_exb = field.field_to_real_space(1j*self.ky*self.phi)
+        ntot_i = self.ntot_i/self.rho_star
+        tperp_i = self.tperp_i/self.rho_star
+        tpar_i = self.tpar_i/self.rho_star
 
-        self.q = ((self.tperp_i + self.tpar_i/2 + 3/2*self.ntot_i)*self.v_exb).real/2
+        self.q = ((tperp_i + tpar_i/2 + 3/2*ntot_i)*v_exb).real/2
 
         dnorm = self.dtheta/self.bmag/self.gradpar
         wgt = np.sum(dnorm*self.grho)
