@@ -321,7 +321,7 @@ def heat_flux_film(run):
     contours = field.calculate_contours(run.q)
 
     plot_options = {'levels':contours, 'cmap':'seismic'}
-    options = {'file_name':'heat_flux',
+    options = {'file_name':'q_i',
                'film_dir':'analysis/moments',
                'frame_dir':'analysis/moments/film_frames',
                'aspect':'equal',
