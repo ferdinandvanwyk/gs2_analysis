@@ -31,7 +31,6 @@ run = Run(sys.argv[1])
 run.calculate_q()
 
 nblobs = np.zeros(run.nt, dtype=int)
-cut_off = np.percentile(run.q, 80, interpolation='nearest')
 for it in range(run.nt):
     tmp = run.q[it,:,:]
 
@@ -39,6 +38,7 @@ for it in range(run.nt):
     tmp = filters.gaussian(tmp, sigma=1)
 
     tmp /= np.max(tmp)
+    cut_off = np.percentile(tmp, 80, interpolation='nearest')
 
     tmp[tmp <= cut_off] = 0.0
     tmp[tmp > cut_off] = 1.0
