@@ -37,8 +37,8 @@ for it in range(run.nt):
     # Apply Gaussian filter
     tmp = filters.gaussian(tmp, sigma=1)
 
-    tmp /= np.max(tmp)
     cut_off = np.percentile(tmp, 80, interpolation='nearest')
+    tmp /= np.max(tmp)
 
     tmp[tmp <= cut_off] = 0.0
     tmp[tmp > cut_off] = 1.0
