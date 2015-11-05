@@ -24,11 +24,11 @@ import field_helper as field
 plot_style.white()
 pal = sns.color_palette('deep')                                                 
 
-os.system('mkdir -p analysis/structures')
-
 run = Run(sys.argv[1])
 
 run.calculate_q()
+
+os.system('mkdir -p ' + run.run_dir + ' analysis/structures')
 
 nblobs = np.zeros(run.nt, dtype=int)
 for it in range(run.nt):
@@ -37,7 +37,8 @@ for it in range(run.nt):
     # Apply Gaussian filter
     tmp = filters.gaussian(tmp, sigma=1)
 
-    cut_off = np.percentile(tmp, 80, interpolation='nearest')
+    cut_off = np.percentile(tmp, 60+2*ip, interpolation='nearest')
+    cut_off /= np.max(tmp)
     tmp /= np.max(tmp)
 
     tmp[tmp <= cut_off] = 0.0
@@ -61,8 +62,8 @@ plt.plot(nblobs)
 plt.xlabel('time index')
 plt.ylabel('Number of blobs')
 plt.ylim(0)
-plt.savefig('analysis/structures/nblobs.pdf')
+plt.savefig(run.run_dir + 'analysis/structures/nblobs.pdf')
 print('Median no. of blobs = ', int(np.median(nblobs)))
-np.savetxt('analysis/structures/nblobs.csv', 
-            np.transpose((range(run.nt), nblobs)), delimiter=',', fmt='%d',
-            header='t_index,nblobs')
+np.savetxt(run.run_dir + 'analysis/structures/nblobs.csv', 
+           np.transpose((range(run.nt), nblobs)), delimiter=',', fmt='%d',
+           header='t_index,nblobs')

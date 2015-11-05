@@ -23,6 +23,11 @@ plot_style.white()
 def phi_film(run):
     """
     Create film of electrostatic potential.
+
+    Parameters
+    ----------
+    run : object
+        Instance of the Run class describing a given simulation
     """
     run.read_phi()
 
@@ -30,8 +35,8 @@ def phi_film(run):
 
     plot_options = {'levels':contours, 'cmap':'seismic'}
     options = {'file_name':'phi',
-               'film_dir':'analysis/moments',
-               'frame_dir':'analysis/moments/film_frames',
+               'film_dir':run.run_dir + 'analysis/moments',
+               'frame_dir':run.run_dir + 'analysis/moments/film_frames',
                'aspect':'equal',
                'xlabel':r'$x (m)$',
                'ylabel':r'$y (m)$',
@@ -62,8 +67,8 @@ def ntot_film(run):
 
     plot_options = {'levels':contours, 'cmap':'seismic'}
     options = {'file_name':'ntot_i',
-               'film_dir':'analysis/moments',
-               'frame_dir':'analysis/moments/film_frames',
+               'film_dir':run.run_dir + 'analysis/moments',
+               'frame_dir':run.run_dir + 'analysis/moments/film_frames',
                'aspect':'equal',
                'xlabel':r'$x (m)$',
                'ylabel':r'$y (m)$',
@@ -87,8 +92,8 @@ def ntot_film(run):
 
     plot_options = {'levels':contours, 'cmap':'seismic'}
     options = {'file_name':'ntot_e',
-               'film_dir':'analysis/moments',
-               'frame_dir':'analysis/moments/film_frames',
+               'film_dir':run.run_dir + 'analysis/moments',
+               'frame_dir':run.run_dir + 'analysis/moments/film_frames',
                'aspect':'equal',
                'xlabel':r'$x (m)$',
                'ylabel':r'$y (m)$',
@@ -119,8 +124,8 @@ def upar_film(run):
 
     plot_options = {'levels':contours, 'cmap':'seismic'}
     options = {'file_name':'upar_i',
-               'film_dir':'analysis/moments',
-               'frame_dir':'analysis/moments/film_frames',
+               'film_dir':run.run_dir + 'analysis/moments',
+               'frame_dir':run.run_dir + 'analysis/moments/film_frames',
                'aspect':'equal',
                'xlabel':r'$x (m)$',
                'ylabel':r'$y (m)$',
@@ -144,8 +149,8 @@ def upar_film(run):
 
     plot_options = {'levels':contours, 'cmap':'seismic'}
     options = {'file_name':'upar_e',
-               'film_dir':'analysis/moments',
-               'frame_dir':'analysis/moments/film_frames',
+               'film_dir':run.run_dir + 'analysis/moments',
+               'frame_dir':run.run_dir + 'analysis/moments/film_frames',
                'aspect':'equal',
                'xlabel':r'$x (m)$',
                'ylabel':r'$y (m)$',
@@ -176,8 +181,8 @@ def v_exb_film(run):
 
     plot_options = {'levels':contours, 'cmap':'seismic'}
     options = {'file_name':'v_exb',
-               'film_dir':'analysis/moments',
-               'frame_dir':'analysis/moments/film_frames',
+               'film_dir':run.run_dir + 'analysis/moments',
+               'frame_dir':run.run_dir + 'analysis/moments/film_frames',
                'aspect':'equal',
                'xlabel':r'$x (m)$',
                'ylabel':r'$y (m)$',
@@ -203,13 +208,12 @@ def tpar_film(run):
 
     run.read_tpar()
 
-    # Ion updar film
     contours = field.calculate_contours(run.tpar_i)
 
     plot_options = {'levels':contours, 'cmap':'seismic'}
     options = {'file_name':'tpar_i',
-               'film_dir':'analysis/moments',
-               'frame_dir':'analysis/moments/film_frames',
+               'film_dir':run.run_dir + 'analysis/moments',
+               'frame_dir':run.run_dir + 'analysis/moments/film_frames',
                'aspect':'equal',
                'xlabel':r'$x (m)$',
                'ylabel':r'$y (m)$',
@@ -228,13 +232,12 @@ def tpar_film(run):
     run.tpar_i = None
     gc.collect()
 
-    # Electron updar film
     contours = field.calculate_contours(run.tpar_e)
 
     plot_options = {'levels':contours, 'cmap':'seismic'}
     options = {'file_name':'tpar_e',
-               'film_dir':'analysis/moments',
-               'frame_dir':'analysis/moments/film_frames',
+               'film_dir':run.run_dir + 'analysis/moments',
+               'frame_dir':run.run_dir + 'analysis/moments/film_frames',
                'aspect':'equal',
                'xlabel':r'$x (m)$',
                'ylabel':r'$y (m)$',
@@ -260,13 +263,12 @@ def tperp_film(run):
     
     run.read_tperp()
 
-    # Ion updar film
     contours = field.calculate_contours(run.tperp_i)
 
     plot_options = {'levels':contours, 'cmap':'seismic'}
     options = {'file_name':'tperp_i',
-               'film_dir':'analysis/moments',
-               'frame_dir':'analysis/moments/film_frames',
+               'film_dir':run.run_dir + 'analysis/moments',
+               'frame_dir':run.run_dir + 'analysis/moments/film_frames',
                'aspect':'equal',
                'xlabel':r'$x (m)$',
                'ylabel':r'$y (m)$',
@@ -285,13 +287,12 @@ def tperp_film(run):
     run.tperp_i = None
     gc.collect()
 
-    # Electron updar film
     contours = field.calculate_contours(run.tperp_e)
 
     plot_options = {'levels':contours, 'cmap':'seismic'}
     options = {'file_name':'tperp_e',
-               'film_dir':'analysis/moments',
-               'frame_dir':'analysis/moments/film_frames',
+               'film_dir':run.run_dir + 'analysis/moments',
+               'frame_dir':run.run_dir + 'analysis/moments/film_frames',
                'aspect':'equal',
                'xlabel':r'$x (m)$',
                'ylabel':r'$y (m)$',
@@ -317,13 +318,12 @@ def heat_flux_film(run):
     
     run.calculate_q()
 
-    # Ion updar film
     contours = field.calculate_contours(run.q)
 
     plot_options = {'levels':contours, 'cmap':'seismic'}
     options = {'file_name':'q_i',
-               'film_dir':'analysis/moments',
-               'frame_dir':'analysis/moments/film_frames',
+               'film_dir':run.run_dir + 'analysis/moments',
+               'frame_dir':run.run_dir + 'analysis/moments/film_frames',
                'aspect':'equal',
                'xlabel':r'$x (m)$',
                'ylabel':r'$y (m)$',
@@ -342,11 +342,42 @@ def heat_flux_film(run):
     run.q = None
     gc.collect()
 
+def radial_heat_flux_film(run):
+    """
+    Make film of perpendicular temperature.
+    """
+    
+    run.calculate_q()
+    run.q_rad = np.mean(run.q, axis=2)
+
+    plot_options = {}
+    options = {'file_name':'q_i_rad',
+               'film_dir':run.run_dir + 'analysis/moments',
+               'frame_dir':run.run_dir + 'analysis/moments/film_frames',
+               'xlabel':r'$x (m)$',
+               'ylabel':r'$\left<Q_{i}(x)\right>_y / Q_{gB}$',
+               'ylim':[0,2],
+               'bbox_inches':'tight',
+               'fps':30}
+
+    options['title'] = []
+    for it in range(run.nt):
+        options['title'].append(r'Time = {0:04d} $\mu s$'.format(
+                                int(np.round((run.t[it]-run.t[0])*1e6))))
+
+    pf.make_film_1d(run.x, run.q_rad, plot_options=plot_options, options=options)
+
+    run.q = None
+    run.q_rad = None
+    gc.collect()
+
 run = Run(sys.argv[1])
-phi_film(run)
-ntot_film(run)
-upar_film(run)
-v_exb_film(run)
-tpar_film(run)
-tperp_film(run)
-heat_flux_film(run)
+
+#phi_film(run)
+#ntot_film(run)
+#upar_film(run)
+#v_exb_film(run)
+#tpar_film(run)
+#tperp_film(run)
+#heat_flux_film(run)
+radial_heat_flux_film(run)

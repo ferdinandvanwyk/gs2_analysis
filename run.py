@@ -29,6 +29,12 @@ class Run(object):
         """
         self.cdf_file = cdf_file
 
+        try:
+            idx = cdf_file.rindex('/')
+            self.run_dir = cdf_file[:idx] + '/'
+        except ValueError:
+            self.run_dir = ''
+
         ncfile = Dataset(cdf_file, 'r')
 
         self.kx = np.array(ncfile.variables['kx'][:])

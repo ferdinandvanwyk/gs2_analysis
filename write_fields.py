@@ -1,6 +1,7 @@
 # Standard
 import os
 import sys
+import gc
 
 # Third Party
 import numpy as np
@@ -18,6 +19,8 @@ def write_v_exb(cdf_file):
     run = Run(cdf_file)
     run.calculate_v_exb()
 
+    os.system('mkdir -p ' + run.run_dir + 'analysis/write_fields')
+
     #interpolate radial coordinate to be approx 0.5cm
     interp_fac = int(np.ceil(run.x[int(run.nx/2)+1]/0.005))
     x_nc = np.linspace(min(run.x), max(run.x), interp_fac*run.nx)
@@ -29,7 +32,7 @@ def write_v_exb(cdf_file):
                                     run.v_exb[it,:,iy])
                 field_interp[it,:,iy] = f(x_nc)
 
-    nc_file = Dataset('analysis/write_fields/v_exb.cdf', 'w')
+    nc_file = Dataset(run.run_dir + 'analysis/write_fields/v_exb.cdf', 'w')
 
     nc_file.createDimension('x', len(x_nc))
     nc_file.createDimension('y', run.ny)
@@ -51,12 +54,17 @@ def write_v_exb(cdf_file):
     nc_t[:] = run.t[:] - run.t[0]
     nc_file.close()
 
+    run.v_exb = None
+    gc.collect()
+
 def write_ntot_i(cdf_file):
     """
     Write the radial ExB velocity to a NetCDF file.
     """
     run = Run(cdf_file)
     run.read_ntot()
+
+    os.system('mkdir -p ' + run.run_dir + 'analysis/write_fields')
 
     #interpolate radial coordinate to be approx 0.5cm
     interp_fac = int(np.ceil(run.x[int(run.nx/2)+1]/0.005))
@@ -69,7 +77,7 @@ def write_ntot_i(cdf_file):
                                     run.ntot_i[it,:,iy])
                 field_interp[it,:,iy] = f(x_nc)
 
-    nc_file = Dataset('analysis/write_fields/ntot_i.cdf', 'w')
+    nc_file = Dataset(run.run_dir + 'analysis/write_fields/ntot_i.cdf', 'w')
 
     nc_file.createDimension('x', len(x_nc))
     nc_file.createDimension('y', run.ny)
@@ -89,11 +97,14 @@ def write_ntot_i(cdf_file):
     nc_x[:] = x_nc[:] - x_nc[-1]/2
     nc_y[:] = run.y[:] - run.y[-1]/2
     nc_t[:] = run.t[:] - run.t[0]
-    nc_file.close()
+    nc_file.close() 
 
-os.system('mkdir -p analysis/write_fields')
+    run.ntot_i = None
+    run.ntot_e = None
+    gc.collect()
 
-cdf_file = sys.argv[1]
-write_v_exb(cdf_file)
-write_ntot_i(cdf_file)
+run = Run(sys.argv[1])
+
+write_v_exb(run)
+write_ntot_i(run)
 
