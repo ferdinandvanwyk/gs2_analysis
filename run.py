@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import seaborn as sns
 import pyfilm as pf
+import f90nml as nml
 plt.rcParams.update({'figure.autolayout': True})
 mpl.rcParams['axes.unicode_minus']=False
 
@@ -30,8 +31,8 @@ class Run(object):
         self.cdf_file = cdf_file
 
         try:
-            idx = cdf_file.rindex('/')
-            self.run_dir = cdf_file[:idx] + '/'
+            idx = self.cdf_file.rindex('/')
+            self.run_dir = self.cdf_file[:idx] + '/'
         except ValueError:
             self.run_dir = ''
 
@@ -44,6 +45,7 @@ class Run(object):
         self.gradpar = np.array(ncfile.variables['gradpar'][:])
         self.grho = np.array(ncfile.variables['grho'][:])
         self.bmag = np.array(ncfile.variables['bmag'][:])
+        self.drhodpsi = ncfile.variables['drhodpsi'][0]
         self.dtheta = np.append(np.diff(self.theta), 0)
 
         ncfile.close()
@@ -178,3 +180,49 @@ class Run(object):
         wgt = np.sum(dnorm*self.grho)
 
         self.q = self.q * dnorm[int(self.nth/2)] / wgt
+
+    def calculate_v_zf(self):
+        """
+        Calculate the zonal flow velocity as a function of radius and time.
+        """
+
+        phi_k = field.get_field(self.cdf_file, 'phi_igomega_by_mode', None)
+
+        # Extract input file from NetCDF and write to text
+        os.system('sh extract_input_file.sh ' + str(self.cdf_file) + 
+                  ' > input_file.in')
+        gs2_in = nml.read('input_file.in')
+
+        # Calculate kxfac
+        self.rhoc = float(gs2_in['theta_grid_parameters']['rhoc'])
+        self.qinp = float(gs2_in['theta_grid_parameters']['qinp'])
+
+        self.kxfac = abs(self.qinp)/self.rhoc/abs(self.drhodpsi)
+
+        self.v_zf = 0.5 * self.kxfac * \
+                    np.fft.ifft(phi_k[:, :, 0] * self.kx[np.newaxis, :], 
+                                axis=1).imag * self.nx * self.rho_star
+
+    def calculate_zf_shear(self):
+        """
+        Calculate the shear in the  zonal flow velocity as a function of radius
+        and time.
+        """
+
+        phi_k = field.get_field(self.cdf_file, 'phi_igomega_by_mode', None)
+
+        # Extract input file from NetCDF and write to text
+        os.system('sh extract_input_file.sh ' + str(self.cdf_file) + 
+                  ' > input_file.in')
+        gs2_in = nml.read('input_file.in')
+
+        # Calculate kxfac
+        self.rhoc = float(gs2_in['theta_grid_parameters']['rhoc'])
+        self.qinp = float(gs2_in['theta_grid_parameters']['qinp'])
+
+        self.kxfac = abs(self.qinp)/self.rhoc/abs(self.drhodpsi)
+
+        self.zf_shear = 0.5 * self.kxfac * \
+                        np.fft.ifft(- phi_k[:, :, 0]*self.kx[np.newaxis, :]**2, 
+                                    axis=1).real * self.nx * self.rho_star
+

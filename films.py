@@ -313,7 +313,7 @@ def tperp_film(run):
 
 def heat_flux_film(run):
     """
-    Make film of perpendicular temperature.
+    Make film of local heat flux as a function of x and y.
     """
     
     run.calculate_q()
@@ -344,7 +344,7 @@ def heat_flux_film(run):
 
 def radial_heat_flux_film(run):
     """
-    Make film of perpendicular temperature.
+    Make film of the radial heat flux.
     """
     
     run.calculate_q()
@@ -356,7 +356,7 @@ def radial_heat_flux_film(run):
                'frame_dir':run.run_dir + 'analysis/moments/film_frames',
                'xlabel':r'$x (m)$',
                'ylabel':r'$\left<Q_{i}(x)\right>_y / Q_{gB}$',
-               'ylim':[0,2],
+               'ylim':0,
                'bbox_inches':'tight',
                'fps':30}
 
@@ -371,13 +371,90 @@ def radial_heat_flux_film(run):
     run.q_rad = None
     gc.collect()
 
-run = Run(sys.argv[1])
+def v_zf_film(run):
+    """
+    Make film of zonal flow velocity as a function of x and t.
+    """
+    
+    run.calculate_v_zf()
 
-#phi_film(run)
-#ntot_film(run)
-#upar_film(run)
-#v_exb_film(run)
-#tpar_film(run)
-#tperp_film(run)
-#heat_flux_film(run)
-radial_heat_flux_film(run)
+    plot_options = {}
+    options = {'file_name':'v_zf',
+               'film_dir':run.run_dir + 'analysis/moments',
+               'frame_dir':run.run_dir + 'analysis/moments/film_frames',
+               'xlabel':r'$x (m)$',
+               'ylabel':r'$v_{ZF} / v_{th,i}$',
+               'bbox_inches':'tight',
+               'fps':30}
+
+    options['title'] = []
+    for it in range(run.nt):
+        options['title'].append(r'Time = {0:04d} $\mu s$'.format(
+                                int(np.round((run.t[it]-run.t[0])*1e6))))
+
+    pf.make_film_1d(run.x, run.v_zf, plot_options=plot_options, options=options)
+
+    run.v_zf = None
+    gc.collect()
+
+def zf_shear_film(run):
+    """
+    Make film of zonal flow velocity as a function of x and t.
+    """
+    
+    run.calculate_zf_shear()
+
+    plot_options = {}
+    options = {'file_name':'zf_shear',
+               'film_dir':run.run_dir + 'analysis/moments',
+               'frame_dir':run.run_dir + 'analysis/moments/film_frames',
+               'xlabel':r'$x (m)$',
+               'ylabel':r"$v'_{ZF} / v_{th,i}$",
+               'bbox_inches':'tight',
+               'fps':30}
+
+    options['title'] = []
+    for it in range(run.nt):
+        options['title'].append(r'Time = {0:04d} $\mu s$'.format(
+                                int(np.round((run.t[it]-run.t[0])*1e6))))
+
+    pf.make_film_1d(run.x, run.zf_shear, plot_options=plot_options, 
+                    options=options)
+
+    run.v_zf = None
+    gc.collect()
+
+run = Run(sys.argv[1])
+case_id = sys.argv[2]
+
+if case_id == '1':
+    phi_film(run)
+elif case_id == '2':
+    ntot_film(run)
+elif case_id == '3':
+    upar_film(run)
+elif case_id == '4':
+    v_exb_film(run)
+elif case_id == '5':
+    v_zf_film(run)
+elif case_id == '6':
+    zf_shear_film(run)
+elif case_id == '7':
+    tpar_film(run)
+elif case_id == '8':
+    tperp_film(run)
+elif case_id == '9':
+    heat_flux_film(run)
+elif case_id == '10':
+    radial_heat_flux_film(run)
+elif case_id == 'all':
+    phi_film(run)
+    ntot_film(run)
+    upar_film(run)
+    v_exb_film(run)
+    v_zf_film(run)
+    zf_shear_film(run)
+    tpar_film(run)
+    tperp_film(run)
+    heat_flux_film(run)
+    radial_heat_flux_film(run)
