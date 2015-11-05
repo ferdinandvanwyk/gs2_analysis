@@ -63,7 +63,6 @@ plt.xlabel('time index')
 plt.ylabel('Number of blobs')
 plt.ylim(0)
 plt.savefig(run.run_dir + 'analysis/structures/nblobs.pdf')
-print('Median no. of blobs = ', int(np.median(nblobs)))
 np.savetxt(run.run_dir + 'analysis/structures/nblobs.csv', 
-           np.transpose((range(run.nt), nblobs)), delimiter=',', fmt='%d',
-           header='t_index,nblobs')
+           np.transpose((range(run.nt), nblobs, [np.median(nblobs)]*run.nt)), 
+           delimiter=',', fmt='%d', header='t_index,nblobs,median')
