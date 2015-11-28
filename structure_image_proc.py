@@ -28,7 +28,10 @@ run = Run(sys.argv[1])
 
 run.calculate_q()
 
-os.system('mkdir -p ' + run.run_dir + ' analysis/structures')
+perc_cutoff = 75
+
+os.system('mkdir -p ' + run.run_dir + ' analysis/structures_' + 
+          str(perc_cutoff))
 
 nblobs = np.zeros(run.nt, dtype=int)
 for it in range(run.nt):
@@ -37,7 +40,7 @@ for it in range(run.nt):
     # Apply Gaussian filter
     tmp = filters.gaussian(tmp, sigma=1)
 
-    cut_off = np.percentile(tmp, 75, interpolation='nearest')
+    cut_off = np.percentile(tmp, perc_cutoff, interpolation='nearest')
     cut_off /= np.max(tmp)
     tmp /= np.max(tmp)
 
@@ -62,7 +65,9 @@ plt.plot(nblobs)
 plt.xlabel('time index')
 plt.ylabel('Number of blobs')
 plt.ylim(0)
-plt.savefig(run.run_dir + 'analysis/structures/nblobs.pdf')
-np.savetxt(run.run_dir + 'analysis/structures/nblobs.csv', 
-           np.transpose((range(run.nt), nblobs, [np.median(nblobs)]*run.nt)), 
-           delimiter=',', fmt='%d', header='t_index,nblobs,median')
+plt.savefig(run.run_dir + 'analysis/structures_' + str(perc_cutoff) + 
+            '/nblobs.pdf')
+np.savetxt(run.run_dir + 'analysis/structures_' + str(perc_cutoff) + 
+           '/nblobs.csv', np.transpose((range(run.nt), nblobs, 
+           [np.median(nblobs)]*run.nt)), delimiter=',', fmt='%d', 
+           header='t_index,nblobs,median')
