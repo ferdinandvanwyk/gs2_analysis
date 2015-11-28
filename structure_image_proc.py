@@ -30,7 +30,7 @@ run.calculate_q()
 
 perc_cutoff = 75
 
-os.system('mkdir -p ' + run.run_dir + ' analysis/structures_' + 
+os.system('mkdir -p ' + run.run_dir + 'analysis/structures_' + 
           str(perc_cutoff))
 
 nblobs = np.zeros(run.nt, dtype=int)
