@@ -111,8 +111,6 @@ def write_ntot_i(run):
 
 run = Run(sys.argv[1])
 
-print(run.x)
-
 run.lab_frame = False
 write_v_exb(run)
 write_ntot_i(run)
