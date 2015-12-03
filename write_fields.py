@@ -52,8 +52,8 @@ def write_v_exb(run):
     nc_field[:,:,:] = field_interp[:,:,:]
     nc_nref[:] = run.nref
     nc_tref[:] = run.tref
-    nc_x[:] = x_nc[:] - x_nc[-1]/2
-    nc_y[:] = run.y[:] - run.y[-1]/2
+    nc_x[:] = x_nc[:]
+    nc_y[:] = run.y[:]
     nc_t[:] = run.t[:] - run.t[0]
     nc_file.close()
 
@@ -100,8 +100,8 @@ def write_ntot_i(run):
     nc_field[:,:,:] = field_interp[:,:,:]
     nc_nref[:] = run.nref
     nc_tref[:] = run.tref
-    nc_x[:] = x_nc[:] - x_nc[-1]/2
-    nc_y[:] = run.y[:] - run.y[-1]/2
+    nc_x[:] = x_nc[:]
+    nc_y[:] = run.y[:]
     nc_t[:] = run.t[:] - run.t[0]
     nc_file.close() 
 
@@ -110,6 +110,8 @@ def write_ntot_i(run):
     gc.collect()
 
 run = Run(sys.argv[1])
+
+print(run.x)
 
 run.lab_frame = False
 write_v_exb(run)
