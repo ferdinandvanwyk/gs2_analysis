@@ -67,6 +67,12 @@ class Run(object):
         self.nref = 1.3180e+19
         # Reference temperature (kT)
         self.tref = 2.2054e+02 / 8.6173324e-5 * 1.38e-23
+        # Angular rotation frequency (s^-1)
+        self.omega = 4.7144e+04
+        # Relates derivatives wrt to psi to those in real space
+        self.dpsi_da = 1.09398
+        # Toroidal mode number
+        self.n0 = int(self.ky[1]*(self.amin/self.rhoref)*self.dpsi_da)
 
         self.nt = len(self.t)
         self.nkx = len(self.kx)
@@ -85,8 +91,15 @@ class Run(object):
         Read the electrostatic potenential from the NetCDF file.
         """
 
-        print('Reading phi...')
         self.phi = field.get_field(self.cdf_file, 'phi_igomega_by_mode', None)
+
+        if self.lab_frame:
+            for ix in range(self.nkx):
+                for iy in range(self.nky):
+                    self.phi[:,ix,iy] = self.phi[:,ix,iy]* \
+                                        np.exp(1j * self.n0 * iy * \
+                                               self.omega * self.t)
+
         self.phi = field.field_to_real_space(self.phi)*self.rho_star
 
     def read_ntot(self):
@@ -94,10 +107,18 @@ class Run(object):
         Read the electrostatic potenential from the NetCDF file.
         """
 
-        print('Reading ntot_i...')
         self.ntot_i = field.get_field(self.cdf_file, 'ntot_igomega_by_mode', 0)
-        print('Reading ntot_e...')
         self.ntot_e = field.get_field(self.cdf_file, 'ntot_igomega_by_mode', 1)
+
+        if self.lab_frame:
+            for ix in range(self.nkx):
+                for iy in range(self.nky):
+                    self.ntot_i[:,ix,iy] = self.ntot_i[:,ix,iy]* \
+                                           np.exp(1j * self.n0 * iy * \
+                                                  self.omega * self.t)
+                    self.ntot_e[:,ix,iy] = self.ntot_e[:,ix,iy]* \
+                                           np.exp(1j * self.n0 * iy * \
+                                                  self.omega * self.t)
 
         # Convert to real space
         self.ntot_i = field.field_to_real_space(self.ntot_i)*self.rho_star
@@ -108,10 +129,18 @@ class Run(object):
         Read the parallel velocity.
         """
 
-        print('Reading upar_i...')
         self.upar_i = field.get_field(self.cdf_file, 'upar_igomega_by_mode', 0)
-        print('Reading upar_e...')
         self.upar_e = field.get_field(self.cdf_file, 'upar_igomega_by_mode', 1)
+
+        if self.lab_frame:
+            for ix in range(self.nkx):
+                for iy in range(self.nky):
+                    self.upar_i[:,ix,iy] = self.upar_i[:,ix,iy]* \
+                                           np.exp(1j * self.n0 * iy * \
+                                                  self.omega * self.t)
+                    self.upar_e[:,ix,iy] = self.upar_e[:,ix,iy]* \
+                                           np.exp(1j * self.n0 * iy * \
+                                                  self.omega * self.t)
 
         self.upar_i = field.field_to_real_space(self.upar_i)*self.rho_star
         self.upar_e = field.field_to_real_space(self.upar_e)*self.rho_star
@@ -121,10 +150,18 @@ class Run(object):
         Read the parallel temperature.
         """
 
-        print('Reading tpar_i...')
         self.tpar_i = field.get_field(self.cdf_file, 'tpar_igomega_by_mode', 0)
-        print('Reading tpar_e...')
         self.tpar_e = field.get_field(self.cdf_file, 'tpar_igomega_by_mode', 1)
+
+        if self.lab_frame:
+            for ix in range(self.nkx):
+                for iy in range(self.nky):
+                    self.tpar_i[:,ix,iy] = self.tpar_i[:,ix,iy]* \
+                                           np.exp(1j * self.n0 * iy * \
+                                                  self.omega * self.t)
+                    self.tpar_e[:,ix,iy] = self.tpar_e[:,ix,iy]* \
+                                           np.exp(1j * self.n0 * iy * \
+                                                  self.omega * self.t)
 
         # Convert to real space
         self.tpar_i = field.field_to_real_space(self.tpar_i)*self.rho_star
@@ -135,10 +172,18 @@ class Run(object):
         Read the perpendicular temperature.
         """
 
-        print('Reading tperp_i...')
         self.tperp_i = field.get_field(self.cdf_file, 'tperp_igomega_by_mode', 0)
-        print('Reading tperp_i...')
         self.tperp_e = field.get_field(self.cdf_file, 'tperp_igomega_by_mode', 1)
+
+        if self.lab_frame:
+            for ix in range(self.nkx):
+                for iy in range(self.nky):
+                    self.tperp_i[:,ix,iy] = self.tperp_i[:,ix,iy]* \
+                                            np.exp(1j * self.n0 * iy * \
+                                                   self.omega * self.t)
+                    self.tperp_e[:,ix,iy] = self.terp_e[:,ix,iy]* \
+                                            np.exp(1j * self.n0 * iy * \
+                                                   self.omega * self.t)
 
         # Convert to real space
         self.tperp_i = field.field_to_real_space(self.tperp_i)*self.rho_star
@@ -151,7 +196,16 @@ class Run(object):
 
         phi_k = field.get_field(self.cdf_file, 'phi_igomega_by_mode', None)
 
-        self.v_exb = field.field_to_real_space(1j*self.ky*phi_k)*\
+        self.v_exb = 1j*self.ky*phi_k
+
+        if self.lab_frame:
+            for ix in range(self.nkx):
+                for iy in range(self.nky):
+                    self.v_exb[:,ix,iy] = self.v_exb[:,ix,iy]* \
+                                          np.exp(1j * self.n0 * iy * \
+                                                 self.omega * self.t)
+
+        self.v_exb = field.field_to_real_space(self.v_exb)* \
                      self.rho_star*self.vth
 
     def calculate_q(self):
@@ -189,7 +243,7 @@ class Run(object):
         phi_k = field.get_field(self.cdf_file, 'phi_igomega_by_mode', None)
 
         # Extract input file from NetCDF and write to text
-        os.system('sh extract_input_file.sh ' + str(self.cdf_file) + 
+        os.system('sh extract_input_file.sh ' + str(self.cdf_file) +
                   ' > input_file.in')
         gs2_in = nml.read('input_file.in')
 
@@ -200,7 +254,7 @@ class Run(object):
         self.kxfac = abs(self.qinp)/self.rhoc/abs(self.drhodpsi)
 
         self.v_zf = 0.5 * self.kxfac * \
-                    np.fft.ifft(phi_k[:, :, 0] * self.kx[np.newaxis, :], 
+                    np.fft.ifft(phi_k[:, :, 0] * self.kx[np.newaxis, :],
                                 axis=1).imag * self.nx * self.rho_star
 
     def calculate_zf_shear(self):
@@ -212,7 +266,7 @@ class Run(object):
         phi_k = field.get_field(self.cdf_file, 'phi_igomega_by_mode', None)
 
         # Extract input file from NetCDF and write to text
-        os.system('sh extract_input_file.sh ' + str(self.cdf_file) + 
+        os.system('sh extract_input_file.sh ' + str(self.cdf_file) +
                   ' > input_file.in')
         gs2_in = nml.read('input_file.in')
 
@@ -223,6 +277,5 @@ class Run(object):
         self.kxfac = abs(self.qinp)/self.rhoc/abs(self.drhodpsi)
 
         self.zf_shear = 0.5 * self.kxfac * \
-                        np.fft.ifft(- phi_k[:, :, 0]*self.kx[np.newaxis, :]**2, 
+                        np.fft.ifft(- phi_k[:, :, 0]*self.kx[np.newaxis, :]**2,
                                     axis=1).real * self.nx * self.rho_star
-

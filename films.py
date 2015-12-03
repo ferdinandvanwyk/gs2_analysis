@@ -425,6 +425,7 @@ def zf_shear_film(run):
     gc.collect()
 
 run = Run(sys.argv[1])
+run.lab_frame = True
 case_id = sys.argv[2]
 
 if case_id == '1':

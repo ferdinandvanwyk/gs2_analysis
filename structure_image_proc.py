@@ -6,6 +6,7 @@ import sys
 import numpy as np
 from netCDF4 import Dataset
 import matplotlib as mpl
+mpl.use('Agg')
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import seaborn as sns
@@ -28,7 +29,7 @@ run = Run(sys.argv[1])
 
 run.calculate_q()
 
-perc_cutoff = 75
+perc_cutoff = 95
 
 os.system('mkdir -p ' + run.run_dir + 'analysis/structures_' + 
           str(perc_cutoff))

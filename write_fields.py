@@ -12,11 +12,10 @@ from scipy import interpolate as interp
 from run import Run
 import field_helper as field
 
-def write_v_exb(cdf_file):
+def write_v_exb(run):
     """
     Write the radial ExB velocity to a NetCDF file.
     """
-    run = Run(cdf_file)
     run.calculate_v_exb()
 
     os.system('mkdir -p ' + run.run_dir + 'analysis/write_fields')
@@ -32,7 +31,11 @@ def write_v_exb(cdf_file):
                                     run.v_exb[it,:,iy])
                 field_interp[it,:,iy] = f(x_nc)
 
-    nc_file = Dataset(run.run_dir + 'analysis/write_fields/v_exb.cdf', 'w')
+    if run.lab_frame:
+        nc_file = Dataset(run.run_dir + 
+                          'analysis/write_fields/v_exb_lab_frame.cdf', 'w')
+    else:
+        nc_file = Dataset(run.run_dir + 'analysis/write_fields/v_exb.cdf', 'w')
 
     nc_file.createDimension('x', len(x_nc))
     nc_file.createDimension('y', run.ny)
@@ -57,11 +60,10 @@ def write_v_exb(cdf_file):
     run.v_exb = None
     gc.collect()
 
-def write_ntot_i(cdf_file):
+def write_ntot_i(run):
     """
     Write the radial ExB velocity to a NetCDF file.
     """
-    run = Run(cdf_file)
     run.read_ntot()
 
     os.system('mkdir -p ' + run.run_dir + 'analysis/write_fields')
@@ -77,7 +79,11 @@ def write_ntot_i(cdf_file):
                                     run.ntot_i[it,:,iy])
                 field_interp[it,:,iy] = f(x_nc)
 
-    nc_file = Dataset(run.run_dir + 'analysis/write_fields/ntot_i.cdf', 'w')
+    if run.lab_frame:
+        nc_file = Dataset(run.run_dir + 
+                          'analysis/write_fields/ntot_i_lab_frame.cdf', 'w')
+    else:
+        nc_file = Dataset(run.run_dir + 'analysis/write_fields/ntot_i.cdf', 'w')
 
     nc_file.createDimension('x', len(x_nc))
     nc_file.createDimension('y', run.ny)
@@ -105,6 +111,7 @@ def write_ntot_i(cdf_file):
 
 run = Run(sys.argv[1])
 
+run.lab_frame = False
 write_v_exb(run)
 write_ntot_i(run)
 
