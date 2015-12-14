@@ -45,7 +45,7 @@ class Run(object):
         self.gradpar = np.array(ncfile.variables['gradpar'][:])
         self.grho = np.array(ncfile.variables['grho'][:])
         self.bmag = np.array(ncfile.variables['bmag'][:])
-        self.drhodpsi = ncfile.variables['drhodpsi'][0]
+        self.drho_dpsi = ncfile.variables['drhodpsi'][0]
         self.dtheta = np.append(np.diff(self.theta), 0)
 
         ncfile.close()
@@ -72,7 +72,8 @@ class Run(object):
         # Relates derivatives wrt to psi to those in real space
         self.dpsi_da = 1.09398
         # Toroidal mode number
-        self.n0 = int(self.ky[1]*(self.amin/self.rhoref)*self.dpsi_da)
+        self.n0 = int(np.around(self.ky[1]*(self.amin/self.rhoref)/\
+                                self.drho_dpsi))
 
         self.nt = len(self.t)
         self.nkx = len(self.kx)
@@ -81,10 +82,12 @@ class Run(object):
         self.nx = self.nkx
         self.ny = 2*(self.nky - 1)
         self.t = self.t*self.amin/self.vth
-        self.x = np.linspace(-np.pi/self.kx[1], np.pi/self.kx[1],
-                             self.nx)*self.rhoref
-        self.y = np.linspace(-np.pi/self.ky[1], np.pi/self.ky[1],
-                             self.ny)*self.rhoref*np.tan(self.pitch_angle)
+        self.x = np.linspace(-np.pi/self.kx[1], np.pi/self.kx[1], self.nx,
+                             endpoint=False) * self.rhoref
+        self.y = np.linspace(-np.pi/self.ky[1], np.pi/self.ky[1], self.ny,
+                             endpoint=False) * self.rhoref * \
+                             np.abs(np.tan(self.pitch_angle))* \
+                             (self.rmaj/self.amin) * (self.drho_dpsi)
 
     def read_phi(self):
         """
@@ -251,7 +254,7 @@ class Run(object):
         self.rhoc = float(gs2_in['theta_grid_parameters']['rhoc'])
         self.qinp = float(gs2_in['theta_grid_parameters']['qinp'])
 
-        self.kxfac = abs(self.qinp)/self.rhoc/abs(self.drhodpsi)
+        self.kxfac = abs(self.qinp)/self.rhoc/abs(self.drho_dpsi)
 
         self.v_zf = 0.5 * self.kxfac * \
                     np.fft.ifft(phi_k[:, :, 0] * self.kx[np.newaxis, :],
@@ -274,7 +277,7 @@ class Run(object):
         self.rhoc = float(gs2_in['theta_grid_parameters']['rhoc'])
         self.qinp = float(gs2_in['theta_grid_parameters']['qinp'])
 
-        self.kxfac = abs(self.qinp)/self.rhoc/abs(self.drhodpsi)
+        self.kxfac = abs(self.qinp)/self.rhoc/abs(self.drho_dpsi)
 
         self.zf_shear = 0.5 * self.kxfac * \
                         np.fft.ifft(- phi_k[:, :, 0]*self.kx[np.newaxis, :]**2,
