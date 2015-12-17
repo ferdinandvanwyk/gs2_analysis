@@ -88,6 +88,7 @@ class Run(object):
                              endpoint=False) * self.rhoref * \
                              np.abs(np.tan(self.pitch_angle))* \
                              (self.rmaj/self.amin) * (self.drho_dpsi)
+        self.lab_frame = False
 
     def read_phi(self):
         """
