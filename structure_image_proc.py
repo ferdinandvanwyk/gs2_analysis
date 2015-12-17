@@ -69,6 +69,5 @@ plt.ylim(0)
 plt.savefig(run.run_dir + 'analysis/structures_' + str(perc_cutoff) + 
             '/nblobs.pdf')
 np.savetxt(run.run_dir + 'analysis/structures_' + str(perc_cutoff) + 
-           '/nblobs.csv', np.transpose((range(run.nt), nblobs, 
-           [np.median(nblobs)]*run.nt)), delimiter=',', fmt='%d', 
-           header='t_index,nblobs,median')
+           '/nblobs.csv', np.transpose((range(run.nt), nblobs)), 
+           delimiter=',', fmt='%d', header='t_index,nblobs')
