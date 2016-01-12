@@ -69,6 +69,7 @@ def calculate_contours(field, n_contours=20):
     """
     Calculates symmetric contours around zero.
     """
+
     f_max = np.max(field)
     f_min = np.min(field)
     if np.abs(f_max) > np.abs(f_min):

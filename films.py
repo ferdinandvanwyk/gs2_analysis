@@ -20,6 +20,19 @@ import plot_style
 import field_helper as field
 plot_style.white()
 
+def normalize(field):
+    """
+    Normalizes the field which is assumed to be of the form f(t, x, y).
+
+    Parameters
+    ----------
+    field : array-like
+        3D array of the form f(t, x, y)
+    """
+
+    for it in range(field.shape[0]):
+        field[it,:,:] /= np.max(np.abs(field[it,:,:]))
+
 def phi_film(run):
     """
     Create film of electrostatic potential.
@@ -30,6 +43,17 @@ def phi_film(run):
         Instance of the Run class describing a given simulation
     """
     run.read_phi()
+
+    print('Normalize the field? y or n')
+    norm = None
+    while norm != 'y' and norm != 'n':
+        norm = str(input())
+        if norm == 'y':
+            normalize(run.phi)
+        elif norm == 'n':
+            pass
+        else:
+            print('Input not recognized, try again: y or n')
 
     contours = field.calculate_contours(run.phi)
 
@@ -61,6 +85,18 @@ def ntot_film(run):
     """
 
     run.read_ntot()
+
+    print('Normalize the field? y or n')
+    norm = None
+    while norm != 'y' and norm != 'n':
+        norm = str(input())
+        if norm == 'y':
+            normalize(run.ntot_i)
+            normalize(run.ntot_e)
+        elif norm == 'n':
+            pass
+        else:
+            print('Input not recognized, try again: y or n')
 
     # Ion density film
     contours = field.calculate_contours(run.ntot_i)
@@ -119,6 +155,18 @@ def upar_film(run):
 
     run.read_upar()
 
+    print('Normalize the field? y or n')
+    norm = None
+    while norm != 'y' and norm != 'n':
+        norm = str(input())
+        if norm == 'y':
+            normalize(run.upar_i)
+            normalize(run.upar_e)
+        elif norm == 'n':
+            pass
+        else:
+            print('Input not recognized, try again: y or n')
+
     # Ion upar film
     contours = field.calculate_contours(run.upar_i)
 
@@ -176,6 +224,17 @@ def v_exb_film(run):
 
     run.calculate_v_exb()
 
+    print('Normalize the field? y or n')
+    norm = None
+    while norm != 'y' and norm != 'n':
+        norm = str(input())
+        if norm == 'y':
+            normalize(run.v_exb)
+        elif norm == 'n':
+            pass
+        else:
+            print('Input not recognized, try again: y or n')
+
     # Ion upar film
     contours = field.calculate_contours(run.v_exb)
 
@@ -207,6 +266,18 @@ def tpar_film(run):
     """
 
     run.read_tpar()
+
+    print('Normalize the field? y or n')
+    norm = None
+    while norm != 'y' and norm != 'n':
+        norm = str(input())
+        if norm == 'y':
+            normalize(run.tpar_i)
+            normalize(run.tpar_e)
+        elif norm == 'n':
+            pass
+        else:
+            print('Input not recognized, try again: y or n')
 
     contours = field.calculate_contours(run.tpar_i)
 
@@ -263,6 +334,18 @@ def tperp_film(run):
     
     run.read_tperp()
 
+    print('Normalize the field? y or n')
+    norm = None
+    while norm != 'y' and norm != 'n':
+        norm = str(input())
+        if norm == 'y':
+            normalize(run.tperp_i)
+            normalize(run.tperp_e)
+        elif norm == 'n':
+            pass
+        else:
+            print('Input not recognized, try again: y or n')
+
     contours = field.calculate_contours(run.tperp_i)
 
     plot_options = {'levels':contours, 'cmap':'seismic'}
@@ -317,6 +400,17 @@ def heat_flux_film(run):
     """
     
     run.calculate_q()
+
+    print('Normalize the field? y or n')
+    norm = None
+    while norm != 'y' and norm != 'n':
+        norm = str(input())
+        if norm == 'y':
+            normalize(run.q)
+        elif norm == 'n':
+            pass
+        else:
+            print('Input not recognized, try again: y or n')
 
     contours = field.calculate_contours(run.q)
 
@@ -426,7 +520,20 @@ def zf_shear_film(run):
 
 run = Run(sys.argv[1])
 run.lab_frame = False
-case_id = sys.argv[2]
+
+print('Which field do you want to make a film of?')
+print('1 : phi')
+print('2 : ntot')
+print('3 : upar')
+print('4 : v_exb')
+print('5 : zonal flow velocity')
+print('6 : zf velocity shear')
+print('7 : tpar')
+print('8 : tperp')
+print('9 : heat flux')
+print('10 : radial heat flux')
+print('all : all moments')
+case_id = str(input())
 
 if case_id == '1':
     phi_film(run)
