@@ -77,7 +77,8 @@ def n_structures(run, perc_thresh, create_film=False):
                                                 background=0)
 
         # Now remove any structures which are too small
-        hist = np.histogram(np.ravel(label_image), bins=range(1,nlabel[it]+1))[0]
+        hist = np.histogram(np.ravel(label_image[it]), 
+                            bins=range(1,nlabel[it]+1))[0]
         smallest_struc = np.mean(hist)*0.1
         hist = hist[hist >  smallest_struc]
 
