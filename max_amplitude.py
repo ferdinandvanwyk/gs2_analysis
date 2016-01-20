@@ -13,11 +13,6 @@ mpl.use('Agg')
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import seaborn as sns
-import pyfilm as pf
-from skimage.segmentation import clear_border
-from skimage.measure import label
-from skimage import filters
-from skimage.morphology import disk
 plt.rcParams.update({'figure.autolayout': True})
 mpl.rcParams['axes.unicode_minus']=False
 
@@ -45,3 +40,18 @@ np.savetxt(run.run_dir + 'analysis/amplitude/max_amp.csv',
            delimiter=',', fmt=['%d', '%.5f', '%.5f'], 
            header='t_index,max_amp_i,max_amp_e')
 
+plt.clf()
+plt.plot(max_amp_i)
+plt.plot(np.arange(run.nt), [np.median(max_amp_i)]*run.nt, c=pal[2])
+plt.xlabel('Time index')
+plt.ylabel('Max ion amplitude')
+plt.ylim(0)
+plt.savefig(run.run_dir + 'analysis/amplitude//max_amp_i.pdf')
+
+plt.clf()
+plt.plot(max_amp_e)
+plt.plot(np.arange(run.nt), [np.median(max_amp_e)]*run.nt, c=pal[2])
+plt.xlabel('Time index')
+plt.ylabel('Max electron amplitude')
+plt.ylim(0)
+plt.savefig(run.run_dir + 'analysis/amplitude//max_amp_e.pdf')

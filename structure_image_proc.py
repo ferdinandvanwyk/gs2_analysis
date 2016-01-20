@@ -85,7 +85,7 @@ def n_structures(run, perc_thresh, create_film=False):
 
     plt.clf()
     plt.plot(nblobs)
-    plt.xlabel('time index')
+    plt.xlabel('Time index')
     plt.ylabel('Number of blobs')
     plt.ylim(0)
     plt.savefig(run.run_dir + 'analysis/structures_' + str(perc_thresh) +
