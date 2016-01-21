@@ -5,19 +5,10 @@ import sys
 # Third Party
 import numpy as np
 from netCDF4 import Dataset
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-from mpl_toolkits.axes_grid1 import make_axes_locatable
-import seaborn as sns
-import pyfilm as pf
 import f90nml as nml
-plt.rcParams.update({'figure.autolayout': True})
-mpl.rcParams['axes.unicode_minus']=False
 
 #local
-import plot_style
 import field_helper as field
-plot_style.white()
 
 class Run(object):
     """

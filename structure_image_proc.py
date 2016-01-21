@@ -8,20 +8,16 @@ from netCDF4 import Dataset
 import matplotlib as mpl
 mpl.use('Agg')
 import matplotlib.pyplot as plt
-from mpl_toolkits.axes_grid1 import make_axes_locatable
 import seaborn as sns
 import pyfilm as pf
-from skimage.segmentation import clear_border
 from skimage.measure import label
 from skimage import filters
-from skimage.morphology import disk
 plt.rcParams.update({'figure.autolayout': True})
 mpl.rcParams['axes.unicode_minus']=False
 
 #local
 from run import Run
 import plot_style
-import field_helper as field
 plot_style.white()
 pal = sns.color_palette('deep')
 
@@ -60,7 +56,7 @@ def n_structures(run, perc_thresh, create_film=False):
     nlabel = np.empty(run.nt, dtype=int)
     label_image = np.empty([run.nt, run.nx, run.ny], dtype=int)
     for it in range(run.nt):
-        tmp = run.ntot_i[it,:,:]
+        tmp = run.ntot_i[it,:,:].copy()
 
         # Apply Gaussian filter
         tmp = filters.gaussian(tmp, sigma=1)
@@ -94,30 +90,34 @@ def n_structures(run, perc_thresh, create_film=False):
     np.savetxt(run.run_dir + 'analysis/structures_' + str(perc_thresh) +
                '/nblobs.csv', np.transpose((range(run.nt), nblobs)),
                delimiter=',', fmt='%d', header='t_index,nblobs')
-
+    
     if create_film:
         # Create film labelled image (could do with sorting out bbox)
         titles = []
         for it in range(run.nt):
             titles.append('No. of structures = {}'.format(nlabel[it]))
         plot_options = {'cmap':'gist_rainbow', 
-                        'levels':range(-1,np.max(label_image))}
+                        'levels':np.arange(-1,np.max(label_image))
+                        }
         options = {'file_name':'structures',
                    'film_dir':run.run_dir + 'analysis/structures_' + 
                               str(perc_thresh) ,
                    'frame_dir':run.run_dir + 'analysis/structures_' + 
                                str(perc_thresh) + '/film_frames',
+                   'nprocs':None,
                    'aspect':'equal',
-                   'xlabel':r'$x (m)$',
-                   'ylabel':r'$y (m)$',
-                   'cbar_ticks':5,
-                   'cbar_label':r'$Label$',
-                   'bbox_inches':'tight',
+                   'xlabel':r'$x$ (m)',
+                   'ylabel':r'$y$ (m)',
+                   'cbar_ticks':np.arange(-1,np.max(label_image),2),
+                   'cbar_label':r'Label',
                    'fps':10,
-                   'title':titles}
+                   'bbox_inches':'tight',
+                   'title':titles
+                   }
 
-        pf.make_film_2d(run.x, run.y, label_image, plot_options=plot_options, 
-                        options=options)
+        pf.make_film_2d(run.x, run.y, label_image, 
+                        plot_options=plot_options, options=options)
+
 
 run = Run(sys.argv[1])
 
