@@ -6,7 +6,7 @@ import sys
 import numpy as np
 from netCDF4 import Dataset
 import matplotlib as mpl
-mpl.use('Agg')
+mpl.use('TkAgg')
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pyfilm as pf
