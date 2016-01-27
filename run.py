@@ -29,19 +29,32 @@ class Run(object):
 
         ncfile = Dataset(cdf_file, 'r')
 
-        self.kx = np.array(ncfile.variables['kx'][:])
-        self.ky = np.array(ncfile.variables['ky'][:])
+        self.drho_dpsi = ncfile.variables['drhodpsi'][0]
+        self.kx = np.array(ncfile.variables['kx'][:])/self.drho_dpsi
+        self.ky = np.array(ncfile.variables['ky'][:])/self.drho_dpsi
         self.theta = np.array(ncfile.variables['theta'][:])
         self.t = np.array(ncfile.variables['t'][:])
         self.gradpar = np.array(ncfile.variables['gradpar'][:])
         self.grho = np.array(ncfile.variables['grho'][:])
         self.bmag = np.array(ncfile.variables['bmag'][:])
-        self.drho_dpsi = ncfile.variables['drhodpsi'][0]
+        self.rprime = np.array(ncfile.variables['Rprime'][:])
         self.dtheta = np.append(np.diff(self.theta), 0)
 
         ncfile.close()
 
+        # Extract input file from NetCDF and write to text
+        os.system('sh extract_input_file.sh ' + str(self.cdf_file) +
+                  ' > input_file.in')
+        gs2_in = nml.read('input_file.in')
+
+        self.rhoc = float(gs2_in['theta_grid_parameters']['rhoc'])
+        self.qinp = float(gs2_in['theta_grid_parameters']['qinp'])
+        self.shat = float(gs2_in['theta_grid_parameters']['shat'])
+        self.jtwist = float(gs2_in['kt_grids_box_parameters']['jtwist'])
+
         # Normalization parameters
+        # Radial location in terms of sqrt(psi_tor_N)
+        self.rho_tor = 0.8
         # Outer scale in m
         self.amin = 0.58044
         # Thermal Velocity of reference species in m/s
@@ -73,12 +86,14 @@ class Run(object):
         self.nx = self.nkx
         self.ny = 2*(self.nky - 1)
         self.t = self.t*self.amin/self.vth
-        self.x = np.linspace(-np.pi/self.kx[1], np.pi/self.kx[1], self.nx,
-                             endpoint=False) * self.rhoref
+        delta_rho = (self.rho_tor/self.qinp) * (self.jtwist/(self.n0*self.shat)) 
+        self.x_box_size = self.rprime[int(self.nth/2)]*delta_rho*self.amin
+        self.x = np.linspace(-self.x_box_size/2, self.x_box_size/2, self.nx,
+                             endpoint=False)
         self.y = np.linspace(-np.pi/self.ky[1], np.pi/self.ky[1], self.ny,
                              endpoint=False) * self.rhoref * \
                              np.abs(np.tan(self.pitch_angle))* \
-                             (self.rmaj/self.amin) * (self.drho_dpsi)
+                             (self.rmaj/self.amin)
         self.lab_frame = False
 
     def read_phi(self):
@@ -236,15 +251,6 @@ class Run(object):
         """
 
         phi_k = field.get_field(self.cdf_file, 'phi_igomega_by_mode', None)
-
-        # Extract input file from NetCDF and write to text
-        os.system('sh extract_input_file.sh ' + str(self.cdf_file) +
-                  ' > input_file.in')
-        gs2_in = nml.read('input_file.in')
-
-        # Calculate kxfac
-        self.rhoc = float(gs2_in['theta_grid_parameters']['rhoc'])
-        self.qinp = float(gs2_in['theta_grid_parameters']['qinp'])
 
         self.kxfac = abs(self.qinp)/self.rhoc/abs(self.drho_dpsi)
 
