@@ -76,8 +76,7 @@ class Run(object):
         # Relates derivatives wrt to psi to those in real space
         self.dpsi_da = 1.09398
         # Toroidal mode number
-        self.n0 = int(np.around(self.ky[1]*(self.amin/self.rhoref)/\
-                                self.drho_dpsi))
+        self.n0 = int(np.around(self.ky[1]*(self.amin/self.rhoref)))
 
         self.nt = len(self.t)
         self.nkx = len(self.kx)

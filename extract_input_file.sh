@@ -2,7 +2,7 @@
 #A small script to extract the input file from the new netcdf diagnostics file.
 
 #File to look in
-FIL=${1:-"*.cdf"}
+FIL=${1:-"*.out.nc"}
 
 #Here we:
 #1: Get the input_file variable from the netcdf file
