@@ -6,6 +6,7 @@ import gc
 import numpy as np
 from netCDF4 import Dataset
 import matplotlib as mpl
+mpl.use('Agg')
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import seaborn as sns
