@@ -1,4 +1,3 @@
-# Standard
 import os
 import sys
 import gc
@@ -12,13 +11,14 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 import seaborn as sns
 import pyfilm as pf
 plt.rcParams.update({'figure.autolayout': True})
-mpl.rcParams['axes.unicode_minus']=False
+mpl.rcParams['axes.unicode_minus'] = False
 
-#local
+# Local
 from run import Run
 import plot_style
 import field_helper as field
 plot_style.white()
+
 
 def normalize(field):
     """
@@ -32,6 +32,7 @@ def normalize(field):
 
     for it in range(field.shape[0]):
         field[it,:,:] /= np.max(np.abs(field[it,:,:]))
+
 
 def phi_film(run):
     """
@@ -74,10 +75,12 @@ def phi_film(run):
         options['title'].append(r'Time = {0:04d} $\mu s$'.format(
                                 int(np.round((run.t[it]-run.t[0])*1e6))))
 
-    pf.make_film_2d(run.x, run.y, run.phi, plot_options=plot_options, options=options)
+    pf.make_film_2d(run.x, run.y, run.phi, plot_options=plot_options,
+                    options=options)
 
     run.phi = None
     gc.collect()
+
 
 def ntot_film(run):
     """
@@ -118,12 +121,13 @@ def ntot_film(run):
         options['title'].append(r'Time = {0:04d} $\mu s$'.format(
                                 int(np.round((run.t[it]-run.t[0])*1e6))))
 
-    pf.make_film_2d(run.x, run.y, run.ntot_i, plot_options=plot_options, options=options)
+    pf.make_film_2d(run.x, run.y, run.ntot_i, plot_options=plot_options,
+                    options=options)
 
     run.ntot_i = None
     gc.collect()
 
-    #Electron density film
+    # Electron density film
     contours = field.calculate_contours(run.ntot_e)
 
     plot_options = {'levels':contours, 'cmap':'seismic'}
@@ -143,10 +147,12 @@ def ntot_film(run):
         options['title'].append(r'Time = {0:04d} $\mu s$'.format(
                                 int(np.round((run.t[it]-run.t[0])*1e6))))
 
-    pf.make_film_2d(run.x, run.y, run.ntot_e, plot_options=plot_options, options=options)
+    pf.make_film_2d(run.x, run.y, run.ntot_e, plot_options=plot_options,
+                    options=options)
 
     run.ntot_e = None
     gc.collect()
+
 
 def upar_film(run):
     """
@@ -187,7 +193,8 @@ def upar_film(run):
         options['title'].append(r'Time = {0:04d} $\mu s$'.format(
                                 int(np.round((run.t[it]-run.t[0])*1e6))))
 
-    pf.make_film_2d(run.x, run.y, run.upar_i, plot_options=plot_options, options=options)
+    pf.make_film_2d(run.x, run.y, run.upar_i, plot_options=plot_options,
+                    options=options)
 
     run.upar_i = None
     gc.collect()
@@ -212,10 +219,12 @@ def upar_film(run):
         options['title'].append(r'Time = {0:04d} $\mu s$'.format(
                                 int(np.round((run.t[it]-run.t[0])*1e6))))
 
-    pf.make_film_2d(run.x, run.y, run.upar_e, plot_options=plot_options, options=options)
+    pf.make_film_2d(run.x, run.y, run.upar_e, plot_options=plot_options,
+                    options=options)
 
     run.upar_e = None
     gc.collect()
+
 
 def v_exb_film(run):
     """
@@ -255,10 +264,12 @@ def v_exb_film(run):
         options['title'].append(r'Time = {0:04d} $\mu s$'.format(
                                 int(np.round((run.t[it]-run.t[0])*1e6))))
 
-    pf.make_film_2d(run.x, run.y, run.v_exb, plot_options=plot_options, options=options)
+    pf.make_film_2d(run.x, run.y, run.v_exb, plot_options=plot_options,
+                    options=options)
 
     run.v_exb = None
     gc.collect()
+
 
 def tpar_film(run):
     """
@@ -298,7 +309,8 @@ def tpar_film(run):
         options['title'].append(r'Time = {0:04d} $\mu s$'.format(
                                 int(np.round((run.t[it]-run.t[0])*1e6))))
 
-    pf.make_film_2d(run.x, run.y, run.tpar_i, plot_options=plot_options, options=options)
+    pf.make_film_2d(run.x, run.y, run.tpar_i, plot_options=plot_options,
+                    options=options)
 
     run.tpar_i = None
     gc.collect()
@@ -322,16 +334,18 @@ def tpar_film(run):
         options['title'].append(r'Time = {0:04d} $\mu s$'.format(
                                 int(np.round((run.t[it]-run.t[0])*1e6))))
 
-    pf.make_film_2d(run.x, run.y, run.tpar_e, plot_options=plot_options, options=options)
+    pf.make_film_2d(run.x, run.y, run.tpar_e, plot_options=plot_options,
+                    options=options)
 
     run.tpar_e = None
     gc.collect()
+
 
 def tperp_film(run):
     """
     Make film of perpendicular temperature.
     """
-    
+
     run.read_tperp()
 
     print('Normalize the field? y or n')
@@ -365,7 +379,8 @@ def tperp_film(run):
         options['title'].append(r'Time = {0:04d} $\mu s$'.format(
                                 int(np.round((run.t[it]-run.t[0])*1e6))))
 
-    pf.make_film_2d(run.x, run.y, run.tperp_i, plot_options=plot_options, options=options)
+    pf.make_film_2d(run.x, run.y, run.tperp_i, plot_options=plot_options,
+                    options=options)
 
     run.tperp_i = None
     gc.collect()
@@ -389,16 +404,18 @@ def tperp_film(run):
         options['title'].append(r'Time = {0:04d} $\mu s$'.format(
                                 int(np.round((run.t[it]-run.t[0])*1e6))))
 
-    pf.make_film_2d(run.x, run.y, run.tperp_e, plot_options=plot_options, options=options)
+    pf.make_film_2d(run.x, run.y, run.tperp_e, plot_options=plot_options,
+                    options=options)
 
     run.tperp_e = None
     gc.collect()
+
 
 def heat_flux_film(run):
     """
     Make film of local heat flux as a function of x and y.
     """
-    
+
     run.calculate_q()
 
     print('Normalize the field? y or n')
@@ -431,16 +448,18 @@ def heat_flux_film(run):
         options['title'].append(r'Time = {0:04d} $\mu s$'.format(
                                 int(np.round((run.t[it]-run.t[0])*1e6))))
 
-    pf.make_film_2d(run.x, run.y, run.q, plot_options=plot_options, options=options)
+    pf.make_film_2d(run.x, run.y, run.q, plot_options=plot_options,
+                    options=options)
 
     run.q = None
     gc.collect()
+
 
 def radial_heat_flux_film(run):
     """
     Make film of the radial heat flux.
     """
-    
+
     run.calculate_q()
     run.q_rad = np.mean(run.q, axis=2)
 
@@ -459,17 +478,19 @@ def radial_heat_flux_film(run):
         options['title'].append(r'Time = {0:04d} $\mu s$'.format(
                                 int(np.round((run.t[it]-run.t[0])*1e6))))
 
-    pf.make_film_1d(run.x, run.q_rad, plot_options=plot_options, options=options)
+    pf.make_film_1d(run.x, run.q_rad, plot_options=plot_options,
+                    options=options)
 
     run.q = None
     run.q_rad = None
     gc.collect()
 
+
 def v_zf_film(run):
     """
     Make film of zonal flow velocity as a function of x and t.
     """
-    
+
     run.calculate_v_zf()
 
     plot_options = {}
@@ -486,16 +507,18 @@ def v_zf_film(run):
         options['title'].append(r'Time = {0:04d} $\mu s$'.format(
                                 int(np.round((run.t[it]-run.t[0])*1e6))))
 
-    pf.make_film_1d(run.x, run.v_zf, plot_options=plot_options, options=options)
+    pf.make_film_1d(run.x, run.v_zf, plot_options=plot_options,
+                    options=options)
 
     run.v_zf = None
     gc.collect()
+
 
 def zf_shear_film(run):
     """
     Make film of zonal flow velocity as a function of x and t.
     """
-    
+
     run.calculate_zf_shear()
 
     plot_options = {}
@@ -512,57 +535,59 @@ def zf_shear_film(run):
         options['title'].append(r'Time = {0:04d} $\mu s$'.format(
                                 int(np.round((run.t[it]-run.t[0])*1e6))))
 
-    pf.make_film_1d(run.x, run.zf_shear, plot_options=plot_options, 
+    pf.make_film_1d(run.x, run.zf_shear, plot_options=plot_options,
                     options=options)
 
     run.v_zf = None
     gc.collect()
 
-run = Run(sys.argv[1])
-run.lab_frame = False
+if __name__ == '__main__':
 
-print('Which field do you want to make a film of?')
-print('1 : phi')
-print('2 : ntot')
-print('3 : upar')
-print('4 : v_exb')
-print('5 : zonal flow velocity')
-print('6 : zf velocity shear')
-print('7 : tpar')
-print('8 : tperp')
-print('9 : heat flux')
-print('10 : radial heat flux')
-print('all : all moments')
-case_id = str(input())
+    run = Run(sys.argv[1])
+    run.lab_frame = False
 
-if case_id == '1':
-    phi_film(run)
-elif case_id == '2':
-    ntot_film(run)
-elif case_id == '3':
-    upar_film(run)
-elif case_id == '4':
-    v_exb_film(run)
-elif case_id == '5':
-    v_zf_film(run)
-elif case_id == '6':
-    zf_shear_film(run)
-elif case_id == '7':
-    tpar_film(run)
-elif case_id == '8':
-    tperp_film(run)
-elif case_id == '9':
-    heat_flux_film(run)
-elif case_id == '10':
-    radial_heat_flux_film(run)
-elif case_id == 'all':
-    phi_film(run)
-    ntot_film(run)
-    upar_film(run)
-    v_exb_film(run)
-    v_zf_film(run)
-    zf_shear_film(run)
-    tpar_film(run)
-    tperp_film(run)
-    heat_flux_film(run)
-    radial_heat_flux_film(run)
+    print('Which field do you want to make a film of?')
+    print('1 : phi')
+    print('2 : ntot')
+    print('3 : upar')
+    print('4 : v_exb')
+    print('5 : zonal flow velocity')
+    print('6 : zf velocity shear')
+    print('7 : tpar')
+    print('8 : tperp')
+    print('9 : heat flux')
+    print('10 : radial heat flux')
+    print('all : all moments')
+    case_id = str(input())
+
+    if case_id == '1':
+        phi_film(run)
+    elif case_id == '2':
+        ntot_film(run)
+    elif case_id == '3':
+        upar_film(run)
+    elif case_id == '4':
+        v_exb_film(run)
+    elif case_id == '5':
+        v_zf_film(run)
+    elif case_id == '6':
+        zf_shear_film(run)
+    elif case_id == '7':
+        tpar_film(run)
+    elif case_id == '8':
+        tperp_film(run)
+    elif case_id == '9':
+        heat_flux_film(run)
+    elif case_id == '10':
+        radial_heat_flux_film(run)
+    elif case_id == 'all':
+        phi_film(run)
+        ntot_film(run)
+        upar_film(run)
+        v_exb_film(run)
+        v_zf_film(run)
+        zf_shear_film(run)
+        tpar_film(run)
+        tperp_film(run)
+        heat_flux_film(run)
+        radial_heat_flux_film(run)
