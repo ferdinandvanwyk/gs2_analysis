@@ -47,10 +47,19 @@ class Run(object):
                   ' > ' + self.run_dir + 'input_file.in')
         gs2_in = nml.read(self.run_dir + 'input_file.in')
 
+        self.g_exb = float(gs2_in['dist_fn_knobs']['g_exb'])
         self.rhoc = float(gs2_in['theta_grid_parameters']['rhoc'])
         self.qinp = float(gs2_in['theta_grid_parameters']['qinp'])
         self.shat = float(gs2_in['theta_grid_parameters']['shat'])
         self.jtwist = float(gs2_in['kt_grids_box_parameters']['jtwist'])
+        self.tprim_1 = float(gs2_in['species_parameters_1']['tprim'])
+        self.fprim_1 = float(gs2_in['species_parameters_1']['fprim'])
+        self.mass_1 = float(gs2_in['species_parameters_1']['mass'])
+        if gs2_in['species_knobs']['nspec'] == 2:
+            self.tprim_2 = float(gs2_in['species_parameters_2']['tprim'])
+            self.fprim_2 = float(gs2_in['species_parameters_2']['fprim'])
+            self.mass_2 = float(gs2_in['species_parameters_2']['mass'])
+
 
         # Normalization parameters
         # Radial location in terms of sqrt(psi_tor_N)
@@ -85,13 +94,13 @@ class Run(object):
         self.nx = self.nkx
         self.ny = 2*(self.nky - 1)
         self.t = self.t*self.amin/self.vth
-        delta_rho = (self.rho_tor/self.qinp) * (self.jtwist/(self.n0*self.shat)) 
+        delta_rho = (self.rho_tor/self.qinp) * (self.jtwist/(self.n0*self.shat))
         self.x_box_size = self.rprime[int(self.nth/2)]*delta_rho*self.amin
         self.x = np.linspace(-self.x_box_size/2, self.x_box_size/2, self.nx,
                              endpoint=False)
         self.y_tor_box_size = self.rmaj * 2 * np.pi / self.n0
         self.y_pol_box_size = self.y_tor_box_size * np.tan(self.pitch_angle)
-        self.y = np.linspace(-self.y_pol_box_size/2, self.y_pol_box_size/2, 
+        self.y = np.linspace(-self.y_pol_box_size/2, self.y_pol_box_size/2,
                              self.ny, endpoint=False)
         self.lab_frame = False
 
@@ -198,6 +207,15 @@ class Run(object):
         self.tperp_i = field.field_to_real_space(self.tperp_i)*self.rho_star
         self.tperp_e = field.field_to_real_space(self.tperp_e)*self.rho_star
 
+    def read_q(self):
+        """
+        Read the flux surfaced averaged heat flux as a function of time.
+        """
+
+        ncfile = Dataset(self.cdf_file, 'r')
+        self.q_i = np.array(ncfile.variables['es_heat_flux'][:,0])
+        self.q_e = np.array(ncfile.variables['es_heat_flux'][:,1])
+
     def calculate_v_exb(self):
         """
         Calculates the radial ExB velocity in real space in units of v_th,i.
@@ -227,9 +245,6 @@ class Run(object):
         self.read_ntot()
         self.read_tperp()
         self.read_tpar()
-
-        ncfile = Dataset(self.cdf_file, 'r')
-        self.q_nc = np.array(ncfile.variables['es_heat_flux'][:])
 
         # Convert to real space
         v_exb = field.field_to_real_space(1j*self.ky*self.phi)
@@ -264,15 +279,6 @@ class Run(object):
         """
 
         phi_k = field.get_field(self.cdf_file, 'phi_igomega_by_mode', None)
-
-        # Extract input file from NetCDF and write to text
-        os.system('sh extract_input_file.sh ' + str(self.cdf_file) +
-                  ' > input_file.in')
-        gs2_in = nml.read('input_file.in')
-
-        # Calculate kxfac
-        self.rhoc = float(gs2_in['theta_grid_parameters']['rhoc'])
-        self.qinp = float(gs2_in['theta_grid_parameters']['qinp'])
 
         self.kxfac = abs(self.qinp)/self.rhoc/abs(self.drho_dpsi)
 
