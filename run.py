@@ -44,8 +44,8 @@ class Run(object):
 
         # Extract input file from NetCDF and write to text
         os.system('sh extract_input_file.sh ' + str(self.cdf_file) +
-                  ' > input_file.in')
-        gs2_in = nml.read('input_file.in')
+                  ' > ' + self.run_dir + 'input_file.in')
+        gs2_in = nml.read(self.run_dir + 'input_file.in')
 
         self.rhoc = float(gs2_in['theta_grid_parameters']['rhoc'])
         self.qinp = float(gs2_in['theta_grid_parameters']['qinp'])
