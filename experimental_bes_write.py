@@ -11,7 +11,7 @@ from run import Run
 import field_helper as field
 
 run = Run(sys.argv[1])
-run.lab_frame = True
+run.lab_frame = False
 version = 1
 
 run.read_ntot()
