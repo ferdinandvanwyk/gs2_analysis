@@ -89,10 +89,10 @@ class Run(object):
         self.x_box_size = self.rprime[int(self.nth/2)]*delta_rho*self.amin
         self.x = np.linspace(-self.x_box_size/2, self.x_box_size/2, self.nx,
                              endpoint=False)
-        self.y = np.linspace(-np.pi/self.ky[1], np.pi/self.ky[1], self.ny,
-                             endpoint=False) * self.rhoref * \
-                             np.abs(np.tan(self.pitch_angle))* \
-                             (self.rmaj/self.amin)
+        self.y_tor_box_size = self.rmaj * 2 * np.pi / self.n0
+        self.y_pol_box_size = self.y_tor_box_size * np.tan(self.pitch_angle)
+        self.y = np.linspace(-self.y_pol_box_size/2, self.y_pol_box_size/2, 
+                             self.ny, endpoint=False)
         self.lab_frame = False
 
     def read_phi(self):
