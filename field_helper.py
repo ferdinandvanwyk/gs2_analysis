@@ -65,6 +65,22 @@ def field_to_real_space(field):
 
     return field_real_space*nx*ny
 
+def field_to_real_space_final_timestep(field):
+    """
+    Converts field from (kx, ky) to (x, y) and saves as new array attribute.
+    """
+    shape = field.shape
+    nx = shape[0]
+    nky = shape[1]
+    nth = shape[2]
+    ny = 2*(nky - 1)
+
+    field_real_space = np.empty([nx,ny,nth],dtype=float)
+    field_real_space = np.fft.irfft2(field, axes=[0,1])
+    field_real_space = np.roll(field_real_space, int(nx/2), axis=0)
+
+    return field_real_space*nx*ny
+
 def calculate_contours(field, n_contours=20):
     """
     Calculates symmetric contours around zero.
