@@ -21,20 +21,6 @@ import field_helper as field
 plot_style.white()
 
 
-def normalize(field):
-    """
-    Normalizes the field which is assumed to be of the form f(t, x, y).
-
-    Parameters
-    ----------
-    field : array-like
-        3D array of the form f(t, x, y)
-    """
-
-    for it in range(field.shape[0]):
-        field[it,:,:] /= np.max(np.abs(field[it,:,:]))
-
-
 def phi_film(run):
     """
     Create film of electrostatic potential.
@@ -51,7 +37,7 @@ def phi_film(run):
     while norm != 'y' and norm != 'n':
         norm = str(input())
         if norm == 'y':
-            normalize(run.phi)
+            field.normalize(run.phi)
         elif norm == 'n':
             pass
         else:
@@ -95,8 +81,8 @@ def ntot_film(run):
     while norm != 'y' and norm != 'n':
         norm = str(input())
         if norm == 'y':
-            normalize(run.ntot_i)
-            normalize(run.ntot_e)
+            field.normalize(run.ntot_i)
+            field.normalize(run.ntot_e)
         elif norm == 'n':
             pass
         else:
@@ -167,8 +153,8 @@ def upar_film(run):
     while norm != 'y' and norm != 'n':
         norm = str(input())
         if norm == 'y':
-            normalize(run.upar_i)
-            normalize(run.upar_e)
+            field.normalize(run.upar_i)
+            field.normalize(run.upar_e)
         elif norm == 'n':
             pass
         else:
@@ -239,7 +225,7 @@ def v_exb_film(run):
     while norm != 'y' and norm != 'n':
         norm = str(input())
         if norm == 'y':
-            normalize(run.v_exb)
+            field.normalize(run.v_exb)
         elif norm == 'n':
             pass
         else:
@@ -284,8 +270,8 @@ def tpar_film(run):
     while norm != 'y' and norm != 'n':
         norm = str(input())
         if norm == 'y':
-            normalize(run.tpar_i)
-            normalize(run.tpar_e)
+            field.normalize(run.tpar_i)
+            field.normalize(run.tpar_e)
         elif norm == 'n':
             pass
         else:
@@ -354,8 +340,8 @@ def tperp_film(run):
     while norm != 'y' and norm != 'n':
         norm = str(input())
         if norm == 'y':
-            normalize(run.tperp_i)
-            normalize(run.tperp_e)
+            field.normalize(run.tperp_i)
+            field.normalize(run.tperp_e)
         elif norm == 'n':
             pass
         else:
@@ -424,7 +410,7 @@ def heat_flux_film(run):
     while norm != 'y' and norm != 'n':
         norm = str(input())
         if norm == 'y':
-            normalize(run.q)
+            field.normalize(run.q)
         elif norm == 'n':
             pass
         else:

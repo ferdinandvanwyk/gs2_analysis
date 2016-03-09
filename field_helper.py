@@ -94,3 +94,16 @@ def calculate_contours(field, n_contours=20):
         contours = np.around(np.linspace(f_min, -f_min, n_contours), 7)
 
     return(contours)
+
+def normalize(field):
+    """
+    Normalizes the field which is assumed to be of the form f(t, x, y).
+
+    Parameters
+    ----------
+    field : array-like
+        3D array of the form f(t, x, y)
+    """
+
+    for it in range(field.shape[0]):
+        field[it,:,:] /= np.max(np.abs(field[it,:,:]))
