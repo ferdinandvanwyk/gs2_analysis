@@ -46,7 +46,7 @@ def structure_analysis(run, perc_thresh, create_film=False):
     save_results(run, no_structures, perc_thresh)
 
     if create_film:
-        make_film(run, nlabels, labelled_image, perc_thresh)
+        make_film(run, no_structures, labelled_image, perc_thresh)
 
 def make_results_dir(run, perc_thresh):
     os.system('mkdir -p ' + run.run_dir + 'analysis/structures_' +
@@ -111,10 +111,10 @@ def save_results(run, no_structures, perc_thresh):
                '/nblobs.csv', np.transpose((range(run.nt), no_structures)),
                delimiter=',', fmt='%d', header='t_index,nblobs')
 
-def make_film(run, nlabels, labelled_image, perc_thresh):
+def make_film(run, no_structures, labelled_image, perc_thresh):
     titles = []
     for it in range(run.nt):
-        titles.append('No. of structures = {}'.format(nlabels[it]))
+        titles.append('No. of structures = {}'.format(no_structures[it]))
     plot_options = {'cmap':'gist_rainbow',
                     'levels':np.arange(-1,np.max(labelled_image))
                     }
