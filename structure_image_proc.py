@@ -6,7 +6,7 @@ import sys
 import numpy as np
 from netCDF4 import Dataset
 import matplotlib as mpl
-mpl.use('TkAgg')
+mpl.use('Agg')
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pyfilm as pf
@@ -73,7 +73,7 @@ def n_structures(run, perc_thresh, create_film=False):
                                                 background=0)
 
         # Now remove any structures which are too small
-        hist = np.histogram(np.ravel(label_image[it]), 
+        hist = np.histogram(np.ravel(label_image[it]),
                             bins=range(1,nlabel[it]+1))[0]
         smallest_struc = np.mean(hist)*0.1
         hist = hist[hist >  smallest_struc]
@@ -90,19 +90,19 @@ def n_structures(run, perc_thresh, create_film=False):
     np.savetxt(run.run_dir + 'analysis/structures_' + str(perc_thresh) +
                '/nblobs.csv', np.transpose((range(run.nt), nblobs)),
                delimiter=',', fmt='%d', header='t_index,nblobs')
-    
+
     if create_film:
         # Create film labelled image (could do with sorting out bbox)
         titles = []
         for it in range(run.nt):
             titles.append('No. of structures = {}'.format(nlabel[it]))
-        plot_options = {'cmap':'gist_rainbow', 
+        plot_options = {'cmap':'gist_rainbow',
                         'levels':np.arange(-1,np.max(label_image))
                         }
         options = {'file_name':'structures',
-                   'film_dir':run.run_dir + 'analysis/structures_' + 
+                   'film_dir':run.run_dir + 'analysis/structures_' +
                               str(perc_thresh) ,
-                   'frame_dir':run.run_dir + 'analysis/structures_' + 
+                   'frame_dir':run.run_dir + 'analysis/structures_' +
                                str(perc_thresh) + '/film_frames',
                    'nprocs':None,
                    'aspect':'equal',
@@ -115,7 +115,7 @@ def n_structures(run, perc_thresh, create_film=False):
                    'title':titles
                    }
 
-        pf.make_film_2d(run.x, run.y, label_image, 
+        pf.make_film_2d(run.x, run.y, label_image,
                         plot_options=plot_options, options=options)
 
 
