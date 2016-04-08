@@ -140,6 +140,6 @@ def make_film(run, no_structures, labelled_image, perc_thresh):
 if __name__ == '__main__':
     run = Run(sys.argv[1])
 
-    structure_analysis(run, 75, create_film=False)
+    structure_analysis(run, 75, create_film=True)
     structure_analysis(run, 95, create_film=False)
 
