@@ -495,16 +495,17 @@ if __name__ == '__main__':
         case_id = str(input())
 
     try:
-        should_normalize = bool(sys.argv[3])
+        should_normalize = str(sys.argv[3])
     except IndexError:
         print('Normalize field? y/n')
         user_answer = str(input())
-        if user_answer == 'y' or user_answer == 'Y':
-            should_normalize = True
-        elif user_answer == 'n' or user_answer == 'N':
-            should_normalize = False
-        else:
-            sys.exit('Wrong option.')
+
+    if user_answer == 'y' or user_answer == 'Y':
+        should_normalize = True
+    elif user_answer == 'n' or user_answer == 'N':
+        should_normalize = False
+    else:
+        sys.exit('Wrong option.')
 
     if case_id == '1':
         phi_film(run, should_normalize)
