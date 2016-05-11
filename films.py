@@ -499,9 +499,9 @@ if __name__ == '__main__':
     except IndexError:
         print('Normalize field? y/n')
         user_answer = str(input())
-        if user_answer == 'y' or 'Y':
+        if user_answer == 'y' or user_answer == 'Y':
             should_normalize = True
-        elif user_answer == 'n' or 'N':
+        elif user_answer == 'n' or user_answer == 'N':
             should_normalize = False
         else:
             sys.exit('Wrong option.')
