@@ -495,7 +495,7 @@ if __name__ == '__main__':
         case_id = str(input())
 
     try:
-        should_normalize = str(sys.argv[3])
+        user_answer = str(sys.argv[3])
     except IndexError:
         print('Normalize field? y/n')
         user_answer = str(input())
