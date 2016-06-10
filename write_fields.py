@@ -32,7 +32,7 @@ def write_v_exb(run):
                 field_interp[it,:,iy] = f(x_nc)
 
     if run.lab_frame:
-        nc_file = Dataset(run.run_dir + 
+        nc_file = Dataset(run.run_dir +
                           'analysis/write_fields/v_exb_lab_frame.cdf', 'w')
     else:
         nc_file = Dataset(run.run_dir + 'analysis/write_fields/v_exb.cdf', 'w')
@@ -80,7 +80,7 @@ def write_ntot_i(run):
                 field_interp[it,:,iy] = f(x_nc)
 
     if run.lab_frame:
-        nc_file = Dataset(run.run_dir + 
+        nc_file = Dataset(run.run_dir +
                           'analysis/write_fields/ntot_i_lab_frame.cdf', 'w')
     else:
         nc_file = Dataset(run.run_dir + 'analysis/write_fields/ntot_i.cdf', 'w')
@@ -103,7 +103,7 @@ def write_ntot_i(run):
     nc_x[:] = x_nc[:]
     nc_y[:] = run.y[:]
     nc_t[:] = run.t[:] - run.t[0]
-    nc_file.close() 
+    nc_file.close()
 
     run.ntot_i = None
     run.ntot_e = None

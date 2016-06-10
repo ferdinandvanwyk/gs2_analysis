@@ -10,7 +10,7 @@ FIL=${1:-"*.out.nc"}
 #3: Convert \\n to new lines
 #4: Delete empty lines
 #5: Ignore first line
-#6: Ignore last line  
+#6: Ignore last line
 #7: Fix " style quotes
 #8: Fix ' style quotes
 ncdump -v input_file ${FIL} |\

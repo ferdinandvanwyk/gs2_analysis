@@ -55,19 +55,19 @@ dth = np.append(np.diff(th), 0)
 
 phi = np.array(ncfile.variables['phi_igomega_by_mode'][:])
 phi = np.swapaxes(phi, 1, 2)
-phi = phi[:,:,:,0] + 1j*phi[:,:,:,1] 
+phi = phi[:,:,:,0] + 1j*phi[:,:,:,1]
 
 dens = np.array(ncfile.variables['ntot_igomega_by_mode'][:,0,:,:,:])
 dens = np.swapaxes(dens, 1, 2)
-dens = dens[:,:,:,0] + 1j*dens[:,:,:,1] 
+dens = dens[:,:,:,0] + 1j*dens[:,:,:,1]
 
 t_perp = np.array(ncfile.variables['tperp_igomega_by_mode'][:,0,:,:,:])
 t_perp = np.swapaxes(t_perp, 1, 2)
-t_perp = t_perp[:,:,:,0] + 1j*t_perp[:,:,:,1] 
+t_perp = t_perp[:,:,:,0] + 1j*t_perp[:,:,:,1]
 
 t_par = np.array(ncfile.variables['tpar_igomega_by_mode'][:,0,:,:,:])
 t_par = np.swapaxes(t_par, 1, 2)
-t_par = t_par[:,:,:,0] + 1j*t_par[:,:,:,1] 
+t_par = t_par[:,:,:,0] + 1j*t_par[:,:,:,1]
 
 q_nc = np.array(ncfile.variables['es_heat_flux'][:])
 part_nc = np.array(ncfile.variables['es_part_flux'][:])
@@ -77,19 +77,19 @@ q_by_ky = np.array(ncfile.variables['total_es_heat_flux_by_ky'][:])
 
 t_perp_final = np.array(ncfile.variables['tperp'][0,:,:,:,:])
 t_perp_final = np.swapaxes(t_perp_final, 0, 1)
-t_perp_final = t_perp_final[:,:,:,0] + 1j*t_perp_final[:,:,:,1] 
+t_perp_final = t_perp_final[:,:,:,0] + 1j*t_perp_final[:,:,:,1]
 
 t_par_final = np.array(ncfile.variables['tpar'][0,:,:,:,:])
 t_par_final = np.swapaxes(t_par_final, 0, 1)
-t_par_final = t_par_final[:,:,:,0] + 1j*t_par_final[:,:,:,1] 
+t_par_final = t_par_final[:,:,:,0] + 1j*t_par_final[:,:,:,1]
 
 ntot_final = np.array(ncfile.variables['ntot'][0,:,:,:,:])
 ntot_final = np.swapaxes(ntot_final, 0, 1)
-ntot_final = ntot_final[:,:,:,0] + 1j*ntot_final[:,:,:,1] 
+ntot_final = ntot_final[:,:,:,0] + 1j*ntot_final[:,:,:,1]
 
 phi_final = np.array(ncfile.variables['phi'][:,:,:,:])
 phi_final = np.swapaxes(phi_final, 0, 1)
-phi_final = phi_final[:,:,:,0] + 1j*phi_final[:,:,:,1] 
+phi_final = phi_final[:,:,:,0] + 1j*phi_final[:,:,:,1]
 
 # Calculate sizes and real arrays
 if 'analysis' not in os.listdir():
@@ -132,14 +132,14 @@ print('part_nc = ', part_nc[-1,0])
 q_gs2 = np.empty([nkx, nky])
 for ikx in range(nkx):
     for iky in range(nky):
-        q_gs2[ikx, iky] = np.sum(((t_perp_final[ikx,iky,:] + 
+        q_gs2[ikx, iky] = np.sum(((t_perp_final[ikx,iky,:] +
                           t_par_final[ikx,iky,:]/2 + 3/2*ntot_final[ikx,iky,:])* \
                                 np.conj(phi_final[ikx,iky,:])*ky[iky]*dnorm).imag)/wgt
 q_gs2 *= 0.5
 q_gs2[:,1:] /= 2
 
 print('Q calc = ', np.sum(q_gs2))
-print('q_final_gs2 = ', q_nc[-1,0], q_perp[-1,0], q_par[-1,0]/2, 
+print('q_final_gs2 = ', q_nc[-1,0], q_perp[-1,0], q_par[-1,0]/2,
         q_perp[-1,0]+q_par[-1,0]/2)
 
 ncfile.close()

@@ -21,7 +21,7 @@ from run import Run
 import plot_style
 import field_helper as field
 plot_style.white()
-pal = sns.color_palette('deep')                                                 
+pal = sns.color_palette('deep')
 
 run = Run(sys.argv[1])
 
@@ -35,9 +35,9 @@ for it in range(run.nt):
     max_amp_i[it] = np.max(run.ntot_i[it, :, :])
     max_amp_e[it] = np.max(run.ntot_e[it, :, :])
 
-np.savetxt(run.run_dir + 'analysis/amplitude/max_amp.csv', 
-           np.transpose((range(run.nt), max_amp_i, max_amp_e)), 
-           delimiter=',', fmt=['%d', '%.5f', '%.5f'], 
+np.savetxt(run.run_dir + 'analysis/amplitude/max_amp.csv',
+           np.transpose((range(run.nt), max_amp_i, max_amp_e)),
+           delimiter=',', fmt=['%d', '%.5f', '%.5f'],
            header='t_index,max_amp_i,max_amp_e')
 
 plt.clf()
