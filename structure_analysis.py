@@ -4,7 +4,6 @@ import sys
 
 # Third Party
 import numpy as np
-from netCDF4 import Dataset
 import matplotlib as mpl
 mpl.use('Agg')
 import matplotlib.pyplot as plt
@@ -13,7 +12,7 @@ import pyfilm as pf
 from skimage.measure import label
 from skimage import filters
 plt.rcParams.update({'figure.autolayout': True})
-mpl.rcParams['axes.unicode_minus']=False
+mpl.rcParams['axes.unicode_minus'] = False
 
 #local
 from run import Run
@@ -140,6 +139,6 @@ def make_film(run, no_structures, labelled_image, perc_thresh):
 if __name__ == '__main__':
     run = Run(sys.argv[1])
 
-    structure_analysis(run, 75, create_film=True)
+    structure_analysis(run, 75, create_film=False)
     structure_analysis(run, 95, create_film=False)
 
