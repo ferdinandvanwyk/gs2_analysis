@@ -31,6 +31,7 @@ class Run(object):
 
         self.drho_dpsi = ncfile.variables['drhodpsi'][0]
         self.kx = np.array(ncfile.variables['kx'][:])/self.drho_dpsi
+        self.kx_natural_order = np.roll(self.kx, int(len(self.kx)/2))
         self.ky = np.array(ncfile.variables['ky'][:])/self.drho_dpsi
         self.theta = np.array(ncfile.variables['theta'][:])
         self.t = np.array(ncfile.variables['t'][:])
@@ -52,10 +53,12 @@ class Run(object):
         self.qinp = float(gs2_in['theta_grid_parameters']['qinp'])
         self.shat = float(gs2_in['theta_grid_parameters']['shat'])
         self.jtwist = float(gs2_in['kt_grids_box_parameters']['jtwist'])
+        self.temp_1 = float(gs2_in['species_parameters_1']['temp'])
         self.tprim_1 = float(gs2_in['species_parameters_1']['tprim'])
         self.fprim_1 = float(gs2_in['species_parameters_1']['fprim'])
         self.mass_1 = float(gs2_in['species_parameters_1']['mass'])
         if gs2_in['species_knobs']['nspec'] == 2:
+            self.temp_2 = float(gs2_in['species_parameters_2']['temp'])
             self.tprim_2 = float(gs2_in['species_parameters_2']['tprim'])
             self.fprim_2 = float(gs2_in['species_parameters_2']['fprim'])
             self.mass_2 = float(gs2_in['species_parameters_2']['mass'])
@@ -285,3 +288,16 @@ class Run(object):
         self.zf_shear = 0.5 * self.kxfac * \
                         np.fft.ifft(- phi_k[:, :, 0]*self.kx[np.newaxis, :]**2,
                                     axis=1).real * self.nx * self.rho_star
+
+    def calc_phi_spectra(self):
+        """Read phi2 values, calc spectra and average over time."""
+        with Dataset(self.cdf_file, 'r') as ncfile:
+            self.phi2_by_kx = np.array(ncfile.variables['phi2_by_kx'][:])
+            self.phi2_by_ky = np.array(ncfile.variables['phi2_by_ky'][:])
+
+        # average over time
+        self.phi2_by_kx = np.mean(self.phi2_by_kx, axis=0)
+        self.phi2_by_ky = np.mean(self.phi2_by_ky, axis=0)
+
+        # change kx order
+        self.phi2_by_kx = np.roll(self.phi2_by_kx, int(self.nkx/2))
