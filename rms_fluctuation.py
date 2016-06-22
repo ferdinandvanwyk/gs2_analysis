@@ -34,11 +34,11 @@ res = {}
 
 rms_i = np.sqrt(np.mean(run.ntot_i**2, axis=0))
 res['ntot_i_rms'] = np.mean(rms_i)
-res['ntot_i_std'] = np.std(rms_i)
+res['ntot_i_err'] = np.std(rms_i)
 
 rms_e = np.sqrt(np.mean(run.ntot_e**2, axis=0))
 res['ntot_e_rms'] = np.mean(rms_e)
-res['ntot_e_std'] = np.std(rms_e)
+res['ntot_e_err'] = np.std(rms_e)
 
 json.dump(res, open(run.run_dir + 'analysis/amplitude/rms.json', 'w'),
           indent=2)
