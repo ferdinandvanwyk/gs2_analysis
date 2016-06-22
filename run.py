@@ -262,9 +262,11 @@ class Run(object):
 
         self.q = self.q * dnorm[int(self.nth/2)] / wgt
 
-    def calculate_v_zf(self):
+    def calculate_v_zf(self, add_mean_flow=False):
         """
         Calculate the zonal flow velocity as a function of radius and time.
+
+        The velocity is in units of vth.
         """
 
         phi_k = field.get_field(self.cdf_file, 'phi_igomega_by_mode', None)
@@ -274,6 +276,9 @@ class Run(object):
         self.v_zf = 0.5 * self.kxfac * \
                     np.fft.ifft(phi_k[:, :, 0] * self.kx[np.newaxis, :],
                                 axis=1).imag * self.nx * self.rho_star
+
+        if add_mean_flow:
+            self.v_zf += self.x * self.g_exb / self.amin
 
     def calculate_zf_shear(self):
         """
