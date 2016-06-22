@@ -42,6 +42,8 @@ def find_spectrum_peak(k, spectrum):
 
 if __name__ == '__main__':
 
+    res = {}
+
     run = Run(sys.argv[1])
 
     os.system('mkdir -p ' + run.run_dir + 'analysis/nl_time')
@@ -58,10 +60,10 @@ if __name__ == '__main__':
 
     te_over_ti = run.temp_2/run.temp_1
 
-    res = {}
     res['tau_nl'] = 1/(kx_peak/run.rhoref * ky_peak/run.rhoref * run.rhoref *
                 run.vth * te_over_ti * rms_i)
-
+    res['kx_peak'] = kx_peak
+    res['ky_peak'] = ky_peak
 
     json.dump(res, open(run.run_dir + 'analysis/nl_time/nl_time.json', 'w'),
               indent=2)
