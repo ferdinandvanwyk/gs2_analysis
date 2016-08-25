@@ -43,6 +43,7 @@ def interpolate_time(run, interp_fac):
     run.phi = phi_tmp[:]
     run.q_i = f_q_i(t_reg)
     run.t = t_reg[:]
+    run.nt = len(run.t)
 
 
 if __name__ == '__main__':
