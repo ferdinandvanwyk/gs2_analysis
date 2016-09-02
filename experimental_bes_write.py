@@ -48,8 +48,11 @@ def interpolate_time(run, interp_fac):
 
 if __name__ == '__main__':
     run = Run(sys.argv[1])
-    run.lab_frame = False
-    version = 1
+    if sys.argv[2] == 'False':
+        run.lab_frame = False
+    else:
+        run.lab_frame = True
+    version = int(sys.argv[3])
 
     run.read_ntot()
     run.read_phi()
