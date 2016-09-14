@@ -57,7 +57,8 @@ if __name__ == '__main__':
     run.read_ntot()
     run.read_phi()
     run.read_q()
-    interpolate_time(run, 1)
+    interp_fac = 1
+    interpolate_time(run, interp_fac)
 
     # Heat flux to SI
     hflux_SI = run.q_i * (run.nref*run.tref*run.vth*run.rhoref**2/run.amin**2)
@@ -76,6 +77,7 @@ if __name__ == '__main__':
     nc_file.createDimension('species', 2)
     nc_file.createDimension('dimpsi', 1)
 
+    nc_interp_fac = nc_file.createVariable('interp_fac','d', ('none',))
     nc_nref = nc_file.createVariable('nref_m-3','d', ('none',))
     nc_tref = nc_file.createVariable('tref_eV','d', ('none',))
     nc_g_exb = nc_file.createVariable('g_exb','d', ('none',))
@@ -99,6 +101,7 @@ if __name__ == '__main__':
     nc_ntot = nc_file.createVariable('ntot','d',('NT', 'NR', 'NZ',))
     nc_phi = nc_file.createVariable('phi','d',('NT', 'NR', 'NZ',))
 
+    nc_interp_fac[:] = interp_fac
     nc_nref[:] = run.nref
     nc_tref[:] = run.tref
     nc_g_exb[:] = run.g_exb
