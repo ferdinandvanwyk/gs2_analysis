@@ -125,7 +125,7 @@ class Run(object):
 
     def read_ntot(self):
         """
-        Read the electrostatic potenential from the NetCDF file.
+        Read the 2D density fluctuations from the NetCDF file.
         """
 
         self.ntot_i = field.get_field(self.cdf_file, 'ntot_igomega_by_mode', 0)
@@ -140,6 +140,29 @@ class Run(object):
                     self.ntot_e[:,ix,iy] = self.ntot_e[:,ix,iy]* \
                                            np.exp(1j * self.n0 * iy * \
                                                   self.omega * self.t)
+
+        # Convert to real space
+        self.ntot_i = field.field_to_real_space(self.ntot_i)*self.rho_star
+        self.ntot_e = field.field_to_real_space(self.ntot_e)*self.rho_star
+
+    def read_ntot_3d(self):
+        """
+        Read the 3D density fluctuations from the NetCDF file.
+        """
+
+        self.ntot_i = field.get_field_3d(self.cdf_file, 'ntot_t', 0)
+        self.ntot_e = field.get_field_3d(self.cdf_file, 'ntot_t', 1)
+
+        if self.lab_frame:
+            for ix in range(self.nkx):
+                for iy in range(self.nky):
+                    for iz in range(self.ntheta):
+                        self.ntot_i[:,ix,iy,iz] = self.ntot_i[:,ix,iy,iz]* \
+                                               np.exp(1j * self.n0 * iy * \
+                                                      self.omega * self.t)
+                        self.ntot_e[:,ix,iy,iz] = self.ntot_e[:,ix,iy,iz]* \
+                                               np.exp(1j * self.n0 * iy * \
+                                                      self.omega * self.t)
 
         # Convert to real space
         self.ntot_i = field.field_to_real_space(self.ntot_i)*self.rho_star
