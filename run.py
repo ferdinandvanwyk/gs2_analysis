@@ -151,7 +151,6 @@ class Run(object):
         """
 
         self.ntot_i = field.get_field_3d(self.cdf_file, 'ntot_t', 0)
-        self.ntot_e = field.get_field_3d(self.cdf_file, 'ntot_t', 1)
 
         if self.lab_frame:
             for ix in range(self.nkx):
@@ -160,13 +159,9 @@ class Run(object):
                         self.ntot_i[:,ix,iy,iz] = self.ntot_i[:,ix,iy,iz]* \
                                                np.exp(1j * self.n0 * iy * \
                                                       self.omega * self.t)
-                        self.ntot_e[:,ix,iy,iz] = self.ntot_e[:,ix,iy,iz]* \
-                                               np.exp(1j * self.n0 * iy * \
-                                                      self.omega * self.t)
 
         # Convert to real space
         self.ntot_i = field.field_to_real_space(self.ntot_i)*self.rho_star
-        self.ntot_e = field.field_to_real_space(self.ntot_e)*self.rho_star
 
     def read_upar(self):
         """

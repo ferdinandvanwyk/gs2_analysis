@@ -204,7 +204,6 @@ def write_ntot_3d(run):
     nc_file.close()
 
     run.ntot_i = None
-    run.ntot_e = None
     gc.collect()
 
 run = Run(sys.argv[1])
