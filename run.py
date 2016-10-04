@@ -312,6 +312,19 @@ class Run(object):
                         np.fft.ifft(- phi_k[:, :, 0]*self.kx[np.newaxis, :]**2,
                                     axis=1).real * self.nx * self.rho_star
 
+    def calculate_zf_shear_rms(self):
+        """
+        Calculate the max rms zonal flow shear.
+        """
+
+        phi_k = field.get_field(self.cdf_file, 'phi_igomega_by_mode', None)
+
+        self.kxfac = abs(self.qinp)/self.rhoc/abs(self.drho_dpsi)
+
+        zf_shear = 0.5 * self.kxfac * (- phi_k[:, :, 0]*self.kx[np.newaxis, :]**2).real * self.rho_star
+
+        self.zf_shear_rms = np.sqrt(np.mean(np.max(np.abs(zf_shear))**2))
+
     def calc_phi_spectra(self):
         """Read phi2 values, calc spectra and average over time."""
         with Dataset(self.cdf_file, 'r') as ncfile:

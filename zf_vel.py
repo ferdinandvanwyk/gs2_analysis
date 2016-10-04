@@ -1,6 +1,7 @@
 # Standard
 import os
 import sys
+import json
 
 # Third Party
 import numpy as np
@@ -20,11 +21,29 @@ import field_helper as field
 plot_style.white()
 pal = sns.color_palette('deep')
 
-if __name__ == '__main__':
-    run = Run(sys.argv[1])
+def zf_shear_max(run):
+    """
+    Calculate max (in kx) rms (in time) shear and write to csv file.
+    """
+    run.calculate_zf_shear_rms()
 
-    run.calculate_v_zf(add_mean_flow=True)
+    os.system('mkdir -p ' + run.run_dir + 'analysis/zonal_flows')
+
+    res = {}
+    res['zf_shear_rms'] = run.zf_shear_rms
+
+    json.dump(res, open(run.run_dir + 'analysis/zonal_flows/results.json', 'w'),
+              indent=2)
+
+def v_zf(run):
+    run.calculate_v_zf(add_mean_flow=False)
 
     plt.plot(run.x, np.mean(run.v_zf, axis=0))
     plt.show()
+
+if __name__ == '__main__':
+    run = Run(sys.argv[1])
+
+    zf_shear_max(run)
+    # v_zf(run)
 
