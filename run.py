@@ -310,7 +310,8 @@ class Run(object):
 
         self.zf_shear = 0.5 * self.kxfac * \
                         np.fft.ifft(- phi_k[:, :, 0]*self.kx[np.newaxis, :]**2,
-                                    axis=1).real * self.nx * self.rho_star
+                                    axis=1).real * \
+                        self.nx * self.rho_star / self.rhoref
 
     def calculate_zf_shear_rms(self):
         """
@@ -321,7 +322,7 @@ class Run(object):
 
         self.kxfac = abs(self.qinp)/self.rhoc/abs(self.drho_dpsi)
 
-        zf_shear = 0.5 * self.kxfac * (- phi_k[:, :, 0]*self.kx[np.newaxis, :]**2).real * self.rho_star
+        zf_shear = 0.5 * self.kxfac * (- phi_k[:, :, 0]*self.kx[np.newaxis, :]**2).real * self.rho_star / self.rhoref
 
         self.zf_shear_rms = np.sqrt(np.mean(np.max(np.abs(zf_shear))**2))
 
