@@ -97,6 +97,8 @@ class Run(object):
         self.nx = self.nkx
         self.ny = 2*(self.nky - 1)
         self.t = self.t*self.amin/self.vth
+        self.x = np.pi * np.linspace(-1/self.kx[1], 1/self.kx[1], self.nx, endpoint=False) / self.drho_dpsi
+        self.y = np.pi * np.linspace(-1/self.ky[1], 1/self.ky[1], self.ny, endpoint=False) / self.drho_dpsi
         delta_rho = (self.rho_tor/self.qinp) * (self.jtwist/(self.n0*self.shat))
         self.r_box_size = self.rprime[int(self.nth/2)]*delta_rho*self.amin
         self.r = np.linspace(-self.r_box_size/2, self.r_box_size/2, self.nx,
