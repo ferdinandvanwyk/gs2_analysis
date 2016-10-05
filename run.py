@@ -101,9 +101,9 @@ class Run(object):
         self.r_box_size = self.rprime[int(self.nth/2)]*delta_rho*self.amin
         self.r = np.linspace(-self.r_box_size/2, self.r_box_size/2, self.nx,
                              endpoint=False)
-        self.y_tor_box_size = self.rmaj * 2 * np.pi / self.n0
-        self.y_pol_box_size = self.y_tor_box_size * np.tan(self.pitch_angle)
-        self.y = np.linspace(-self.y_pol_box_size/2, self.y_pol_box_size/2,
+        self.z_tor_box_size = self.rmaj * 2 * np.pi / self.n0
+        self.z_pol_box_size = self.z_tor_box_size * np.tan(self.pitch_angle)
+        self.z = np.linspace(-self.z_pol_box_size/2, self.z_pol_box_size/2,
                              self.ny, endpoint=False)
         self.lab_frame = False
 
