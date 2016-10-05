@@ -156,12 +156,12 @@ if __name__ == '__main__':
     sys.exit()
 
     # Redo previous calculation
-    run.x = 2*np.pi*np.linspace(0, 1/run.kx[1], run.nx, endpoint=False)
-    run.y = 2*np.pi*np.linspace(0, 1/run.ky[1], run.ny, endpoint=False)
+    run.r = 2*np.pi*np.linspace(0, 1/run.kx[1], run.nx, endpoint=False)
+    run.z = 2*np.pi*np.linspace(0, 1/run.ky[1], run.ny, endpoint=False)
 
     # Calculate (rho - rho_n0) and call it rho_n and alpha
-    run.rho_n = run.x * run.rhoc / run.q_rational * run.drho_dpsi * run.rho_star
-    run.alpha = run.y * run.drho_dpsi * run.rho_star
+    run.rho_n = run.r * run.rhoc / run.q_rational * run.drho_dpsi * run.rho_star
+    run.alpha = run.z * run.drho_dpsi * run.rho_star
 
     run.R = np.empty([run.nx, run.ny, run.nth], dtype=float)
     run.Z = np.empty([run.nx, run.ny, run.nth], dtype=float)

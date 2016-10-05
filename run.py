@@ -98,8 +98,8 @@ class Run(object):
         self.ny = 2*(self.nky - 1)
         self.t = self.t*self.amin/self.vth
         delta_rho = (self.rho_tor/self.qinp) * (self.jtwist/(self.n0*self.shat))
-        self.x_box_size = self.rprime[int(self.nth/2)]*delta_rho*self.amin
-        self.x = np.linspace(-self.x_box_size/2, self.x_box_size/2, self.nx,
+        self.r_box_size = self.rprime[int(self.nth/2)]*delta_rho*self.amin
+        self.r = np.linspace(-self.r_box_size/2, self.r_box_size/2, self.nx,
                              endpoint=False)
         self.y_tor_box_size = self.rmaj * 2 * np.pi / self.n0
         self.y_pol_box_size = self.y_tor_box_size * np.tan(self.pitch_angle)
@@ -296,7 +296,7 @@ class Run(object):
                                 axis=1).imag * self.nx * self.rho_star
 
         if add_mean_flow:
-            self.v_zf += self.x * self.g_exb / self.amin
+            self.v_zf += self.r * self.g_exb / self.amin
 
     def calculate_zf_shear(self):
         """
