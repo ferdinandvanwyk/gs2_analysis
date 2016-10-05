@@ -147,23 +147,31 @@ class Run(object):
         self.ntot_i = field.field_to_real_space(self.ntot_i)*self.rho_star
         self.ntot_e = field.field_to_real_space(self.ntot_e)*self.rho_star
 
-    def read_ntot_3d(self):
+    def read_ntot_3d(self, it=0, isp=0):
         """
         Read the 3D density fluctuations from the NetCDF file.
+
+        Parameters
+        ----------
+
+        it : int
+            Time index
+        isp : int
+            Species index
         """
 
-        self.ntot_i = field.get_field_3d(self.cdf_file, 'ntot_t', 0)
+        self.ntot_i = field.get_field_3d(self.cdf_file, 'ntot_t', it, isp)
 
         if self.lab_frame:
             for ix in range(self.nkx):
                 for iy in range(self.nky):
                     for iz in range(self.ntheta):
-                        self.ntot_i[:,ix,iy,iz] = self.ntot_i[:,ix,iy,iz]* \
+                        self.ntot_i[ix,iy,iz] = self.ntot_i[ix,iy,iz]* \
                                                np.exp(1j * self.n0 * iy * \
                                                       self.omega * self.t)
 
         # Convert to real space
-        self.ntot_i = field.field_to_real_space(self.ntot_i)*self.rho_star
+        self.ntot_i = field.field_to_real_space_3d(self.ntot_i)*self.rho_star
 
     def read_upar(self):
         """
