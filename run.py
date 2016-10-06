@@ -90,7 +90,7 @@ class Run(object):
         # Toroidal mode number
         self.n0 = int(np.around(self.ky[1]*(self.amin/self.rhoref)))
 
-        self.nt = len(self.t)
+        self.nt = len(self.t_gs2)
         self.nkx = len(self.kx)
         self.nky = len(self.ky)
         self.nth = len(self.theta)
