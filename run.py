@@ -34,7 +34,7 @@ class Run(object):
         self.kx_natural_order = np.roll(self.kx, int(len(self.kx)/2))
         self.ky = np.array(ncfile.variables['ky'][:])/self.drho_dpsi
         self.theta = np.array(ncfile.variables['theta'][:])
-        self.t = np.array(ncfile.variables['t'][:])
+        self.t_gs2 = np.array(ncfile.variables['t'][:])
         self.gradpar = np.array(ncfile.variables['gradpar'][:])
         self.grho = np.array(ncfile.variables['grho'][:])
         self.bmag = np.array(ncfile.variables['bmag'][:])
@@ -96,7 +96,7 @@ class Run(object):
         self.nth = len(self.theta)
         self.nx = self.nkx
         self.ny = 2*(self.nky - 1)
-        self.t = self.t*self.amin/self.vth
+        self.t = self.t_gs2*self.amin/self.vth
         self.x = np.pi * np.linspace(-1/self.kx[1], 1/self.kx[1], self.nx, endpoint=False) / self.drho_dpsi
         self.y = np.pi * np.linspace(-1/self.ky[1], 1/self.ky[1], self.ny, endpoint=False) / self.drho_dpsi
         delta_rho = (self.rho_tor/self.qinp) * (self.jtwist/(self.n0*self.shat))
