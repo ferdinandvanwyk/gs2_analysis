@@ -302,7 +302,7 @@ class Run(object):
         self.kxfac = abs(self.qinp)/self.rhoc/abs(self.drho_dpsi)
 
         self.v_zf = 0.5 * self.kxfac * \
-                    np.fft.ifft(phi_k[:, :, 0] * self.kx[np.newaxis, :],
+                    np.fft.ifft(-phi_k[:, :, 0] * self.kx[np.newaxis, :],
                                 axis=1).imag * self.nx * self.rho_star
 
         if add_mean_flow:

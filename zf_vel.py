@@ -37,8 +37,10 @@ def zf_shear_max(run):
 
 def v_zf(run):
     run.calculate_v_zf(add_mean_flow=False)
+    run.calculate_zf_shear()
 
     plt.plot(run.r, np.mean(run.v_zf, axis=0))
+    plt.plot(run.r, np.mean(run.zf_shear, axis=0))
     plt.show()
 
 if __name__ == '__main__':
