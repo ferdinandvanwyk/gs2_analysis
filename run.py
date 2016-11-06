@@ -85,8 +85,6 @@ class Run(object):
         self.tref = 2.2054e+02 / 8.6173324e-5 * 1.38e-23
         # Angular rotation frequency (s^-1)
         self.omega = 4.7144e+04
-        # Relates derivatives wrt to psi to those in real space
-        self.dpsi_da = 1.09398
         # Toroidal mode number
         self.n0 = int(np.around(self.ky[1]*(self.amin/self.rhoref)))
 
