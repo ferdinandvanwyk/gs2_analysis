@@ -133,7 +133,7 @@ def make_film(run, no_structures, labelled_image, perc_thresh):
                'title':titles
                }
 
-    pf.make_film_2d(run.x, run.y, labelled_image,
+    pf.make_film_2d(run.r, run.z, labelled_image,
                     plot_options=plot_options, options=options)
 
 if __name__ == '__main__':

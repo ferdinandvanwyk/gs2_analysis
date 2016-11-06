@@ -119,8 +119,8 @@ if __name__ == '__main__':
     nc_temp[:] = [1, 1]
     nc_tprim[:] = run.tprim_1
     nc_fprim[:] = run.fprim_1
-    nc_x[:] = run.x[:] + run.rmaj
-    nc_y[:] = run.y[:]
+    nc_x[:] = run.r[:] + run.rmaj
+    nc_y[:] = run.z[:]
     nc_t[:] = run.t[:] - run.t[0]
     nc_ntot[:,:,:] = run.ntot_i[:,:,:]
     nc_phi[:,:,:] = run.phi[:,:,:]

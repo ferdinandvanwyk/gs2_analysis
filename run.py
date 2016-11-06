@@ -34,7 +34,7 @@ class Run(object):
         self.kx_natural_order = np.roll(self.kx, int(len(self.kx)/2))
         self.ky = np.array(ncfile.variables['ky'][:])/self.drho_dpsi
         self.theta = np.array(ncfile.variables['theta'][:])
-        self.t = np.array(ncfile.variables['t'][:])
+        self.t_gs2 = np.array(ncfile.variables['t'][:])
         self.gradpar = np.array(ncfile.variables['gradpar'][:])
         self.grho = np.array(ncfile.variables['grho'][:])
         self.bmag = np.array(ncfile.variables['bmag'][:])
@@ -90,20 +90,22 @@ class Run(object):
         # Toroidal mode number
         self.n0 = int(np.around(self.ky[1]*(self.amin/self.rhoref)))
 
-        self.nt = len(self.t)
+        self.nt = len(self.t_gs2)
         self.nkx = len(self.kx)
         self.nky = len(self.ky)
         self.nth = len(self.theta)
         self.nx = self.nkx
         self.ny = 2*(self.nky - 1)
-        self.t = self.t*self.amin/self.vth
+        self.t = self.t_gs2*self.amin/self.vth
+        self.x = np.pi * np.linspace(-1/self.kx[1], 1/self.kx[1], self.nx, endpoint=False) / self.drho_dpsi
+        self.y = np.pi * np.linspace(-1/self.ky[1], 1/self.ky[1], self.ny, endpoint=False) / self.drho_dpsi
         delta_rho = (self.rho_tor/self.qinp) * (self.jtwist/(self.n0*self.shat))
-        self.x_box_size = self.rprime[int(self.nth/2)]*delta_rho*self.amin
-        self.x = np.linspace(-self.x_box_size/2, self.x_box_size/2, self.nx,
+        self.r_box_size = self.rprime[int(self.nth/2)]*delta_rho*self.amin
+        self.r = np.linspace(-self.r_box_size/2, self.r_box_size/2, self.nx,
                              endpoint=False)
-        self.y_tor_box_size = self.rmaj * 2 * np.pi / self.n0
-        self.y_pol_box_size = self.y_tor_box_size * np.tan(self.pitch_angle)
-        self.y = np.linspace(-self.y_pol_box_size/2, self.y_pol_box_size/2,
+        self.z_tor_box_size = self.rmaj * 2 * np.pi / self.n0
+        self.z_pol_box_size = self.z_tor_box_size * np.tan(self.pitch_angle)
+        self.z = np.linspace(-self.z_pol_box_size/2, self.z_pol_box_size/2,
                              self.ny, endpoint=False)
         self.lab_frame = False
 
@@ -145,23 +147,31 @@ class Run(object):
         self.ntot_i = field.field_to_real_space(self.ntot_i)*self.rho_star
         self.ntot_e = field.field_to_real_space(self.ntot_e)*self.rho_star
 
-    def read_ntot_3d(self):
+    def read_ntot_3d(self, it=0, isp=0):
         """
         Read the 3D density fluctuations from the NetCDF file.
+
+        Parameters
+        ----------
+
+        it : int
+            Time index
+        isp : int
+            Species index
         """
 
-        self.ntot_i = field.get_field_3d(self.cdf_file, 'ntot_t', 0)
+        self.ntot_i = field.get_field_3d(self.cdf_file, 'ntot_t', it, isp)
 
         if self.lab_frame:
             for ix in range(self.nkx):
                 for iy in range(self.nky):
                     for iz in range(self.ntheta):
-                        self.ntot_i[:,ix,iy,iz] = self.ntot_i[:,ix,iy,iz]* \
+                        self.ntot_i[ix,iy,iz] = self.ntot_i[ix,iy,iz]* \
                                                np.exp(1j * self.n0 * iy * \
                                                       self.omega * self.t)
 
         # Convert to real space
-        self.ntot_i = field.field_to_real_space(self.ntot_i)*self.rho_star
+        self.ntot_i = field.field_to_real_space_3d(self.ntot_i)*self.rho_star
 
     def read_upar(self):
         """
@@ -292,11 +302,11 @@ class Run(object):
         self.kxfac = abs(self.qinp)/self.rhoc/abs(self.drho_dpsi)
 
         self.v_zf = 0.5 * self.kxfac * \
-                    np.fft.ifft(phi_k[:, :, 0] * self.kx[np.newaxis, :],
+                    np.fft.ifft(-phi_k[:, :, 0] * self.kx[np.newaxis, :],
                                 axis=1).imag * self.nx * self.rho_star
 
         if add_mean_flow:
-            self.v_zf += self.x * self.g_exb / self.amin
+            self.v_zf += self.r * self.g_exb / self.amin
 
     def calculate_zf_shear(self):
         """
@@ -310,7 +320,8 @@ class Run(object):
 
         self.zf_shear = 0.5 * self.kxfac * \
                         np.fft.ifft(- phi_k[:, :, 0]*self.kx[np.newaxis, :]**2,
-                                    axis=1).real * self.nx * self.rho_star
+                                    axis=1).real * \
+                        self.nx * self.rho_star / self.rhoref
 
     def calculate_zf_shear_rms(self):
         """
@@ -321,7 +332,7 @@ class Run(object):
 
         self.kxfac = abs(self.qinp)/self.rhoc/abs(self.drho_dpsi)
 
-        zf_shear = 0.5 * self.kxfac * (- phi_k[:, :, 0]*self.kx[np.newaxis, :]**2).real * self.rho_star
+        zf_shear = 0.5 * self.kxfac * (- phi_k[:, :, 0]*self.kx[np.newaxis, :]**2).real * self.rho_star / self.rhoref
 
         self.zf_shear_rms = np.sqrt(np.mean(np.max(np.abs(zf_shear))**2))
 

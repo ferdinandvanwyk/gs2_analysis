@@ -21,13 +21,13 @@ def write_v_exb(run):
     os.system('mkdir -p ' + run.run_dir + 'analysis/write_fields')
 
     #interpolate radial coordinate to be approx 0.5cm
-    interp_fac = int(np.ceil(run.x[int(run.nx/2)+1]/0.005))
-    x_nc = np.linspace(min(run.x), max(run.x), interp_fac*run.nx)
+    interp_fac = int(np.ceil(run.r[int(run.nx/2)+1]/0.005))
+    x_nc = np.linspace(min(run.r), max(run.r), interp_fac*run.nx)
     field_interp = np.empty([run.nt, len(x_nc), run.ny],
                             dtype=float)
     for it in range(run.nt):
         for iy in range(run.ny):
-                f = interp.interp1d(run.x,
+                f = interp.interp1d(run.r,
                                     run.v_exb[it,:,iy])
                 field_interp[it,:,iy] = f(x_nc)
 
@@ -53,7 +53,7 @@ def write_v_exb(run):
     nc_nref[:] = run.nref
     nc_tref[:] = run.tref
     nc_x[:] = x_nc[:]
-    nc_y[:] = run.y[:]
+    nc_y[:] = run.z[:]
     nc_t[:] = run.t[:] - run.t[0]
     nc_file.close()
 
@@ -69,13 +69,13 @@ def write_phi2(run):
     os.system('mkdir -p ' + run.run_dir + 'analysis/write_fields')
 
     #interpolate radial coordinate to be approx 0.5cm
-    interp_fac = int(np.ceil(run.x[int(run.nx/2)+1]/0.005))
-    x_nc = np.linspace(min(run.x), max(run.x), interp_fac*run.nx)
+    interp_fac = int(np.ceil(run.r[int(run.nx/2)+1]/0.005))
+    x_nc = np.linspace(min(run.r), max(run.r), interp_fac*run.nx)
     field_interp = np.empty([run.nt, len(x_nc), run.ny],
                             dtype=float)
     for it in range(run.nt):
         for iy in range(run.ny):
-                f = interp.interp1d(run.x,
+                f = interp.interp1d(run.r,
                                     run.phi[it,:,iy])
                 field_interp[it,:,iy] = f(x_nc)
 
@@ -101,7 +101,7 @@ def write_phi2(run):
     nc_nref[:] = run.nref
     nc_tref[:] = run.tref
     nc_x[:] = x_nc[:]
-    nc_y[:] = run.y[:]
+    nc_y[:] = run.z[:]
     nc_t[:] = run.t[:] - run.t[0]
     nc_file.close()
 
@@ -117,13 +117,13 @@ def write_ntot_i(run):
     os.system('mkdir -p ' + run.run_dir + 'analysis/write_fields')
 
     #interpolate radial coordinate to be approx 0.5cm
-    interp_fac = int(np.ceil(run.x[int(run.nx/2)+1]/0.005))
-    x_nc = np.linspace(min(run.x), max(run.x), interp_fac*run.nx)
+    interp_fac = int(np.ceil(run.r[int(run.nx/2)+1]/0.005))
+    x_nc = np.linspace(min(run.r), max(run.r), interp_fac*run.nx)
     field_interp = np.empty([run.nt, len(x_nc), run.ny],
                             dtype=float)
     for it in range(run.nt):
         for iy in range(run.ny):
-                f = interp.interp1d(run.x,
+                f = interp.interp1d(run.r,
                                     run.ntot_i[it,:,iy])
                 field_interp[it,:,iy] = f(x_nc)
 
@@ -149,7 +149,7 @@ def write_ntot_i(run):
     nc_nref[:] = run.nref
     nc_tref[:] = run.tref
     nc_x[:] = x_nc[:]
-    nc_y[:] = run.y[:]
+    nc_y[:] = run.z[:]
     nc_t[:] = run.t[:] - run.t[0]
     nc_file.close()
 

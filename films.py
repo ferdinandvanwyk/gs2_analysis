@@ -54,7 +54,7 @@ def phi_film(run, should_normalize):
         options['title'].append(r'Time = {0:04d} $\mu s$'.format(
                                 int(np.round((run.t[it]-run.t[0])*1e6))))
 
-    pf.make_film_2d(run.x, run.y, run.phi, plot_options=plot_options,
+    pf.make_film_2d(run.r, run.z, run.phi, plot_options=plot_options,
                     options=options)
 
     run.phi = None
@@ -92,7 +92,7 @@ def ntot_film(run, should_normalize):
         options['title'].append(r'Time = {0:04d} $\mu s$'.format(
                                 int(np.round((run.t[it]-run.t[0])*1e6))))
 
-    pf.make_film_2d(run.x, run.y, run.ntot_i, plot_options=plot_options,
+    pf.make_film_2d(run.r, run.z, run.ntot_i, plot_options=plot_options,
                     options=options)
 
     run.ntot_i = None
@@ -118,7 +118,7 @@ def ntot_film(run, should_normalize):
         options['title'].append(r'Time = {0:04d} $\mu s$'.format(
                                 int(np.round((run.t[it]-run.t[0])*1e6))))
 
-    pf.make_film_2d(run.x, run.y, run.ntot_e, plot_options=plot_options,
+    pf.make_film_2d(run.r, run.z, run.ntot_e, plot_options=plot_options,
                     options=options)
 
     run.ntot_e = None
@@ -156,7 +156,7 @@ def upar_film(run, should_normalize):
         options['title'].append(r'Time = {0:04d} $\mu s$'.format(
                                 int(np.round((run.t[it]-run.t[0])*1e6))))
 
-    pf.make_film_2d(run.x, run.y, run.upar_i, plot_options=plot_options,
+    pf.make_film_2d(run.r, run.z, run.upar_i, plot_options=plot_options,
                     options=options)
 
     run.upar_i = None
@@ -182,7 +182,7 @@ def upar_film(run, should_normalize):
         options['title'].append(r'Time = {0:04d} $\mu s$'.format(
                                 int(np.round((run.t[it]-run.t[0])*1e6))))
 
-    pf.make_film_2d(run.x, run.y, run.upar_e, plot_options=plot_options,
+    pf.make_film_2d(run.r, run.z, run.upar_e, plot_options=plot_options,
                     options=options)
 
     run.upar_e = None
@@ -219,7 +219,7 @@ def v_exb_film(run, should_normalize):
         options['title'].append(r'Time = {0:04d} $\mu s$'.format(
                                 int(np.round((run.t[it]-run.t[0])*1e6))))
 
-    pf.make_film_2d(run.x, run.y, run.v_exb, plot_options=plot_options,
+    pf.make_film_2d(run.r, run.z, run.v_exb, plot_options=plot_options,
                     options=options)
 
     run.v_exb = None
@@ -256,7 +256,7 @@ def tpar_film(run, should_normalize):
         options['title'].append(r'Time = {0:04d} $\mu s$'.format(
                                 int(np.round((run.t[it]-run.t[0])*1e6))))
 
-    pf.make_film_2d(run.x, run.y, run.tpar_i, plot_options=plot_options,
+    pf.make_film_2d(run.r, run.z, run.tpar_i, plot_options=plot_options,
                     options=options)
 
     run.tpar_i = None
@@ -281,7 +281,7 @@ def tpar_film(run, should_normalize):
         options['title'].append(r'Time = {0:04d} $\mu s$'.format(
                                 int(np.round((run.t[it]-run.t[0])*1e6))))
 
-    pf.make_film_2d(run.x, run.y, run.tpar_e, plot_options=plot_options,
+    pf.make_film_2d(run.r, run.z, run.tpar_e, plot_options=plot_options,
                     options=options)
 
     run.tpar_e = None
@@ -318,7 +318,7 @@ def tperp_film(run, should_normalize):
         options['title'].append(r'Time = {0:04d} $\mu s$'.format(
                                 int(np.round((run.t[it]-run.t[0])*1e6))))
 
-    pf.make_film_2d(run.x, run.y, run.tperp_i, plot_options=plot_options,
+    pf.make_film_2d(run.r, run.z, run.tperp_i, plot_options=plot_options,
                     options=options)
 
     run.tperp_i = None
@@ -343,7 +343,7 @@ def tperp_film(run, should_normalize):
         options['title'].append(r'Time = {0:04d} $\mu s$'.format(
                                 int(np.round((run.t[it]-run.t[0])*1e6))))
 
-    pf.make_film_2d(run.x, run.y, run.tperp_e, plot_options=plot_options,
+    pf.make_film_2d(run.r, run.z, run.tperp_e, plot_options=plot_options,
                     options=options)
 
     run.tperp_e = None
@@ -379,7 +379,7 @@ def heat_flux_film(run, should_normalize):
         options['title'].append(r'Time = {0:04d} $\mu s$'.format(
                                 int(np.round((run.t[it]-run.t[0])*1e6))))
 
-    pf.make_film_2d(run.x, run.y, run.q, plot_options=plot_options,
+    pf.make_film_2d(run.r, run.z, run.q, plot_options=plot_options,
                     options=options)
 
     run.q = None
@@ -409,7 +409,7 @@ def radial_heat_flux_film(run, should_normalize):
         options['title'].append(r'Time = {0:04d} $\mu s$'.format(
                                 int(np.round((run.t[it]-run.t[0])*1e6))))
 
-    pf.make_film_1d(run.x, run.q_rad, plot_options=plot_options,
+    pf.make_film_1d(run.r, run.q_rad, plot_options=plot_options,
                     options=options)
 
     run.q = None
@@ -438,7 +438,7 @@ def v_zf_film(run, should_normalize):
         options['title'].append(r'Time = {0:04d} $\mu s$'.format(
                                 int(np.round((run.t[it]-run.t[0])*1e6))))
 
-    pf.make_film_1d(run.x, run.v_zf, plot_options=plot_options,
+    pf.make_film_1d(run.r, run.v_zf, plot_options=plot_options,
                     options=options)
 
     run.v_zf = None
@@ -466,7 +466,7 @@ def zf_shear_film(run, should_normalize):
         options['title'].append(r'Time = {0:04d} $\mu s$'.format(
                                 int(np.round((run.t[it]-run.t[0])*1e6))))
 
-    pf.make_film_1d(run.x, run.zf_shear, plot_options=plot_options,
+    pf.make_film_1d(run.r, run.zf_shear, plot_options=plot_options,
                     options=options)
 
     run.v_zf = None
