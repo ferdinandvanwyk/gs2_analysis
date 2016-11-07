@@ -12,7 +12,7 @@ from scipy import interpolate as interp
 from run import Run
 import field_helper as field
 
-def write_v_exb(run):
+def write_v_exb(run, lab_frame):
     """
     Write the radial ExB velocity to a NetCDF file.
     """
@@ -31,7 +31,7 @@ def write_v_exb(run):
                                     run.v_exb[it,:,iy])
                 field_interp[it,:,iy] = f(x_nc)
 
-    if run.lab_frame:
+    if lab_frame:
         nc_file = Dataset(run.run_dir +
                           'analysis/write_fields/v_exb_lab_frame.cdf', 'w')
     else:
@@ -60,7 +60,7 @@ def write_v_exb(run):
     run.v_exb = None
     gc.collect()
 
-def write_phi2(run):
+def write_phi2(run, lab_frame):
     """
     Write the radial ExB velocity to a NetCDF file.
     """
@@ -79,7 +79,7 @@ def write_phi2(run):
                                     run.phi[it,:,iy])
                 field_interp[it,:,iy] = f(x_nc)
 
-    if run.lab_frame:
+    if lab_frame:
         nc_file = Dataset(run.run_dir +
                           'analysis/write_fields/phi_lab_frame.cdf', 'w')
     else:
@@ -108,7 +108,7 @@ def write_phi2(run):
     run.phi = None
     gc.collect()
 
-def write_ntot_i(run):
+def write_ntot_i(run, lab_frame):
     """
     Write the radial ExB velocity to a NetCDF file.
     """
@@ -127,7 +127,7 @@ def write_ntot_i(run):
                                     run.ntot_i[it,:,iy])
                 field_interp[it,:,iy] = f(x_nc)
 
-    if run.lab_frame:
+    if lab_frame:
         nc_file = Dataset(run.run_dir +
                           'analysis/write_fields/ntot_i_lab_frame.cdf', 'w')
     else:
@@ -157,7 +157,7 @@ def write_ntot_i(run):
     run.ntot_e = None
     gc.collect()
 
-def write_ntot_3d(run):
+def write_ntot_3d(run, lab_frame):
     """
     Write the radial ExB velocity to a NetCDF file.
     """
@@ -174,7 +174,7 @@ def write_ntot_3d(run):
     x_gs2 -= x_gs2[int(run.nx/2)]
     y_gs2 -= y_gs2[int(run.ny/2)]
 
-    if run.lab_frame:
+    if lab_frame:
         nc_file = Dataset(run.run_dir +
                           'analysis/write_fields/ntot_3d_lab_frame.cdf', 'w')
     else:
@@ -207,8 +207,8 @@ def write_ntot_3d(run):
     gc.collect()
 
 run = Run(sys.argv[1])
+lab_frame = False
 
-run.lab_frame = False
 write_v_exb(run)
 write_phi2(run)
 write_ntot_i(run)

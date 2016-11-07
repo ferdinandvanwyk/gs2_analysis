@@ -49,13 +49,13 @@ def interpolate_time(run, interp_fac):
 if __name__ == '__main__':
     run = Run(sys.argv[1])
     if sys.argv[2] == 'False':
-        run.lab_frame = False
+        lab_frame = False
     else:
-        run.lab_frame = True
+        lab_frame = True
     version = int(sys.argv[3])
 
-    run.read_ntot()
-    run.read_phi()
+    run.read_ntot(lab_frame=lab_frame)
+    run.read_phi(lab_frame=lab_frame)
     run.read_q()
     interp_fac = 1
     interpolate_time(run, interp_fac)
@@ -105,7 +105,7 @@ if __name__ == '__main__':
     nc_nref[:] = run.nref
     nc_tref[:] = run.tref
     nc_g_exb[:] = run.g_exb
-    if run.lab_frame:
+    if lab_frame:
         nc_lab[:] = 1
     else:
         nc_lab[:] = 0

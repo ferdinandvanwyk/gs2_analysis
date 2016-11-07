@@ -475,7 +475,6 @@ def zf_shear_film(run, should_normalize):
 if __name__ == '__main__':
 
     run = Run(sys.argv[1])
-    run.lab_frame = False
 
     try:
         case_id = str(sys.argv[2])

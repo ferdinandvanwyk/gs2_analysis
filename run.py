@@ -105,16 +105,15 @@ class Run(object):
         self.z_pol_box_size = self.z_tor_box_size * np.tan(self.pitch_angle)
         self.z = np.linspace(-self.z_pol_box_size/2, self.z_pol_box_size/2,
                              self.ny, endpoint=False)
-        self.lab_frame = False
 
-    def read_phi(self):
+    def read_phi(self, lab_frame=False):
         """
         Read the electrostatic potenential from the NetCDF file.
         """
 
         self.phi = field.get_field(self.cdf_file, 'phi_igomega_by_mode', None)
 
-        if self.lab_frame:
+        if lab_frame:
             for ix in range(self.nkx):
                 for iy in range(self.nky):
                     self.phi[:,ix,iy] = self.phi[:,ix,iy]* \
@@ -123,7 +122,7 @@ class Run(object):
 
         self.phi = field.field_to_real_space(self.phi)*self.rho_star
 
-    def read_ntot(self):
+    def read_ntot(self, lab_frame=False):
         """
         Read the 2D density fluctuations from the NetCDF file.
         """
@@ -131,7 +130,7 @@ class Run(object):
         self.ntot_i = field.get_field(self.cdf_file, 'ntot_igomega_by_mode', 0)
         self.ntot_e = field.get_field(self.cdf_file, 'ntot_igomega_by_mode', 1)
 
-        if self.lab_frame:
+        if lab_frame:
             for ix in range(self.nkx):
                 for iy in range(self.nky):
                     self.ntot_i[:,ix,iy] = self.ntot_i[:,ix,iy]* \
@@ -145,7 +144,7 @@ class Run(object):
         self.ntot_i = field.field_to_real_space(self.ntot_i)*self.rho_star
         self.ntot_e = field.field_to_real_space(self.ntot_e)*self.rho_star
 
-    def read_ntot_3d(self, it=0, isp=0):
+    def read_ntot_3d(self, lab_frame=False, it=0, isp=0):
         """
         Read the 3D density fluctuations from the NetCDF file.
 
@@ -160,7 +159,7 @@ class Run(object):
 
         self.ntot_i = field.get_field_3d(self.cdf_file, 'ntot_t', it, isp)
 
-        if self.lab_frame:
+        if lab_frame:
             for ix in range(self.nkx):
                 for iy in range(self.nky):
                     for iz in range(self.nth):
@@ -171,7 +170,7 @@ class Run(object):
         # Convert to real space
         self.ntot_i = field.field_to_real_space_3d(self.ntot_i)*self.rho_star
 
-    def read_upar(self):
+    def read_upar(self, lab_frame=False):
         """
         Read the parallel velocity.
         """
@@ -179,7 +178,7 @@ class Run(object):
         self.upar_i = field.get_field(self.cdf_file, 'upar_igomega_by_mode', 0)
         self.upar_e = field.get_field(self.cdf_file, 'upar_igomega_by_mode', 1)
 
-        if self.lab_frame:
+        if lab_frame:
             for ix in range(self.nkx):
                 for iy in range(self.nky):
                     self.upar_i[:,ix,iy] = self.upar_i[:,ix,iy]* \
@@ -192,7 +191,7 @@ class Run(object):
         self.upar_i = field.field_to_real_space(self.upar_i)*self.rho_star
         self.upar_e = field.field_to_real_space(self.upar_e)*self.rho_star
 
-    def read_tpar(self):
+    def read_tpar(self, lab_frame=False):
         """
         Read the parallel temperature.
         """
@@ -200,7 +199,7 @@ class Run(object):
         self.tpar_i = field.get_field(self.cdf_file, 'tpar_igomega_by_mode', 0)
         self.tpar_e = field.get_field(self.cdf_file, 'tpar_igomega_by_mode', 1)
 
-        if self.lab_frame:
+        if lab_frame:
             for ix in range(self.nkx):
                 for iy in range(self.nky):
                     self.tpar_i[:,ix,iy] = self.tpar_i[:,ix,iy]* \
@@ -214,7 +213,7 @@ class Run(object):
         self.tpar_i = field.field_to_real_space(self.tpar_i)*self.rho_star
         self.tpar_e = field.field_to_real_space(self.tpar_e)*self.rho_star
 
-    def read_tperp(self):
+    def read_tperp(self, lab_frame):
         """
         Read the perpendicular temperature.
         """
@@ -222,7 +221,7 @@ class Run(object):
         self.tperp_i = field.get_field(self.cdf_file, 'tperp_igomega_by_mode', 0)
         self.tperp_e = field.get_field(self.cdf_file, 'tperp_igomega_by_mode', 1)
 
-        if self.lab_frame:
+        if lab_frame:
             for ix in range(self.nkx):
                 for iy in range(self.nky):
                     self.tperp_i[:,ix,iy] = self.tperp_i[:,ix,iy]* \
@@ -245,7 +244,7 @@ class Run(object):
         self.q_i = np.array(ncfile.variables['es_heat_flux'][:,0])
         self.q_e = np.array(ncfile.variables['es_heat_flux'][:,1])
 
-    def calculate_v_exb(self):
+    def calculate_v_exb(self, lab_frame=False):
         """
         Calculates the radial ExB velocity in real space in units of v_th,i.
         """
@@ -254,7 +253,7 @@ class Run(object):
 
         self.v_exb = 1j*self.ky*phi_k
 
-        if self.lab_frame:
+        if lab_frame:
             for ix in range(self.nkx):
                 for iy in range(self.nky):
                     self.v_exb[:,ix,iy] = self.v_exb[:,ix,iy]* \
