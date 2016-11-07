@@ -163,7 +163,7 @@ class Run(object):
         if self.lab_frame:
             for ix in range(self.nkx):
                 for iy in range(self.nky):
-                    for iz in range(self.ntheta):
+                    for iz in range(self.nth):
                         self.ntot_i[ix,iy,iz] = self.ntot_i[ix,iy,iz]* \
                                                np.exp(1j * self.n0 * iy * \
                                                       self.omega * self.t)
