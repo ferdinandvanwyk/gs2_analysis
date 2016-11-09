@@ -212,5 +212,5 @@ lab_frame = False
 write_v_exb(run)
 write_phi2(run)
 write_ntot_i(run)
-write_ntot_3d(run)
+# write_ntot_3d(run)
 
