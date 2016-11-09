@@ -35,13 +35,8 @@ def zf_shear_max(run):
     json.dump(res, open(run.run_dir + 'analysis/zonal_flows/results.json', 'w'),
               indent=2)
 
-def v_zf(run):
-    run.calculate_v_zf(add_mean_flow=False)
-    run.calculate_zf_shear()
-
 if __name__ == '__main__':
     run = Run(sys.argv[1])
 
     zf_shear_max(run)
-    v_zf(run)
 
