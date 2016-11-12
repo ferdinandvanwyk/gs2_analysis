@@ -21,15 +21,17 @@ import field_helper as field
 plot_style.white()
 pal = sns.color_palette('deep')
 
-def zf_shear_max(run):
+def write_zf_shear(run):
     """
     Calculate max (in kx) rms (in time) shear and write to csv file.
     """
+    run.calculate_zf_shear_max()
     run.calculate_zf_shear_rms()
 
     os.system('mkdir -p ' + run.run_dir + 'analysis/zonal_flows')
 
     res = {}
+    res['zf_shear_max'] = run.zf_shear_max
     res['zf_shear_rms'] = run.zf_shear_rms
 
     json.dump(res, open(run.run_dir + 'analysis/zonal_flows/results.json', 'w'),
@@ -38,5 +40,5 @@ def zf_shear_max(run):
 if __name__ == '__main__':
     run = Run(sys.argv[1])
 
-    zf_shear_max(run)
+    write_zf_shear(run)
 
