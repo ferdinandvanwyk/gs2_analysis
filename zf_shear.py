@@ -25,8 +25,7 @@ def write_zf_shear(run):
     """
     Calculate max (in kx) rms (in time) shear and write to csv file.
     """
-    run.calculate_zf_shear_max()
-    run.calculate_zf_shear_rms()
+    run.calculate_zf_shear()
 
     os.system('mkdir -p ' + run.run_dir + 'analysis/zonal_flows')
 
