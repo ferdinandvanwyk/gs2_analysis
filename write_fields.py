@@ -209,8 +209,8 @@ def write_ntot_3d(run, lab_frame):
 run = Run(sys.argv[1])
 lab_frame = False
 
-write_v_exb(run)
-write_phi2(run)
-write_ntot_i(run)
-# write_ntot_3d(run)
+write_v_exb(run, lab_frame)
+write_phi2(run, lab_frame)
+write_ntot_i(run, lab_frame)
+# write_ntot_3d(run, lab_frame)
 
