@@ -24,22 +24,41 @@ import field_helper as field
 plot_style.white()
 pal = sns.color_palette('deep')
 
-run = Run(sys.argv[1])
+def average_time_windows(n):
+    """
+    Calculate a mean over 100 time step windows and return array of means.
+    """
 
-run.read_ntot()
+    nt = n.shape[0]
+    nx = n.shape[1]
+    ny = n.shape[2]
+    time_window_size = 100
 
-os.system('mkdir -p ' + run.run_dir + 'analysis/amplitude')
+    ntime_windows = int(nt/time_window_size)
 
-res = {}
+    rms_t = np.empty([ntime_windows], dtype=float)
+    for i in range(ntime_windows):
+        rms_t[i] = np.sqrt(np.mean(n[i*100:(i+1)*100, :, :]**2))
 
-rms_i = np.sqrt(np.mean(run.ntot_i**2, axis=0))
-res['ntot_i_rms'] = np.mean(rms_i)
-res['ntot_i_err'] = np.std(rms_i)
+    return rms_t
 
-rms_e = np.sqrt(np.mean(run.ntot_e**2, axis=0))
-res['ntot_e_rms'] = np.mean(rms_e)
-res['ntot_e_err'] = np.std(rms_e)
+if __name__ == '__main__':
+    run = Run(sys.argv[1])
 
-json.dump(res, open(run.run_dir + 'analysis/amplitude/rms.json', 'w'),
-          indent=2)
+    run.read_ntot()
+
+    os.system('mkdir -p ' + run.run_dir + 'analysis/amplitude')
+
+    res = {}
+
+    rms_i_t = average_time_windows(run.ntot_i)
+    res['ntot_i_rms'] = np.mean(rms_i_t)
+    res['ntot_i_err'] = np.std(rms_i_t)
+
+    rms_e_t = average_time_windows(run.ntot_e)
+    res['ntot_e_rms'] = np.mean(rms_e_t)
+    res['ntot_e_err'] = np.std(rms_e_t)
+
+    json.dump(res, open(run.run_dir + 'analysis/amplitude/rms.json', 'w'),
+              indent=2)
 
