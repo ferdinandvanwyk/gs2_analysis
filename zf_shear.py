@@ -49,7 +49,7 @@ def check_zf_calcs(run):
     # Show zonal flow velocity is equivalent
     dx = np.abs(run.x[1] - run.x[0])
 
-    phi_zf = 0.5 * run.kxfac * \
+    phi_zf = 0.5 * run.norm_fac * \
              np.fft.ifft(phi_k[0, :, 0]).real * run.nx * run.rho_star
     v_zf = np.gradient(phi_zf, dx)
 

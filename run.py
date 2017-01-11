@@ -37,6 +37,8 @@ class Run(object):
         self.t_gs2 = np.array(ncfile.variables['t'][:])
         self.gradpar = np.array(ncfile.variables['gradpar'][:])
         self.grho = np.array(ncfile.variables['grho'][:])
+        self.gds2 = np.array(ncfile.variables['gds2'][:])
+        self.galpha = np.sqrt(self.drho_dpsi**2 * self.gds2)
         self.bmag = np.array(ncfile.variables['bmag'][:])
         self.rprime = np.array(ncfile.variables['Rprime'][:])
         self.dtheta = np.append(np.diff(self.theta), 0)
@@ -251,8 +253,9 @@ class Run(object):
                                           np.exp(1j * self.n0 * iy * \
                                                  self.omega * self.t)
 
-        self.v_exb = field.field_to_real_space(self.v_exb)* \
-                     self.rho_star*self.vth
+        self.v_exb = (0.5 / self.grho[int(self.nth/2)]) * \
+                      field.field_to_real_space(self.v_exb)* \
+                      self.rho_star
 
     def calculate_q(self):
         """
@@ -287,9 +290,10 @@ class Run(object):
 
         phi_k = field.get_field(self.cdf_file, 'phi_igomega_by_mode', None)
 
-        self.kxfac = abs(self.qinp)/self.rhoc/abs(self.drho_dpsi)
+        self.norm_fac = 0.5 * abs(self.qinp)/self.rhoc/ \
+                        abs(self.galpha[int(self.nth/2)])
 
-        self.v_zf = 0.5 * self.kxfac * \
+        self.v_zf = 0.5 * self.norm_fac * \
                     np.fft.ifft(-phi_k[:, :, 0] * self.kx[np.newaxis, :],
                                 axis=1).imag * self.nx * self.rho_star
 
@@ -304,9 +308,10 @@ class Run(object):
 
         phi_k = field.get_field(self.cdf_file, 'phi_igomega_by_mode', None)
 
-        self.kxfac = abs(self.qinp)/self.rhoc/abs(self.drho_dpsi)
+        self.norm_fac = 0.5 * abs(self.qinp)/self.rhoc/ \
+                        abs(self.galpha[int(self.nth/2)])
 
-        self.zf_shear = 0.5 * self.kxfac * \
+        self.zf_shear = 0.5 * self.norm_fac * \
                         np.fft.ifft(- phi_k[:, :, 0]*self.kx[np.newaxis, :]**2,
                                     axis=1).real * \
                         self.nx * self.rho_star / self.rhoref
