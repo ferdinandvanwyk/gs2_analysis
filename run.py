@@ -206,7 +206,7 @@ class Run(object):
         self.tpar_i = field.field_to_real_space(self.tpar_i)*self.rho_star
         self.tpar_e = field.field_to_real_space(self.tpar_e)*self.rho_star
 
-    def read_tperp(self, lab_frame):
+    def read_tperp(self, lab_frame=False):
         """
         Read the perpendicular temperature.
         """

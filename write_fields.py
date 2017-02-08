@@ -16,7 +16,7 @@ def write_v_exb(run, lab_frame):
     """
     Write the radial ExB velocity to a NetCDF file.
     """
-    run.calculate_v_exb()
+    run.calculate_v_exb(lab_frame)
 
     os.system('mkdir -p ' + run.run_dir + 'analysis/write_fields')
 
@@ -64,7 +64,7 @@ def write_phi2(run, lab_frame):
     """
     Write the radial ExB velocity to a NetCDF file.
     """
-    run.read_phi()
+    run.read_phi(lab_frame)
 
     os.system('mkdir -p ' + run.run_dir + 'analysis/write_fields')
 
@@ -112,7 +112,7 @@ def write_ntot_i(run, lab_frame):
     """
     Write the radial ExB velocity to a NetCDF file.
     """
-    run.read_ntot()
+    run.read_ntot(lab_frame)
 
     os.system('mkdir -p ' + run.run_dir + 'analysis/write_fields')
 
@@ -161,7 +161,7 @@ def write_ntot_3d(run, lab_frame):
     """
     Write the radial ExB velocity to a NetCDF file.
     """
-    run.read_ntot_3d()
+    run.read_ntot_3d(lab_frame)
 
     os.system('mkdir -p ' + run.run_dir + 'analysis/write_fields')
 
